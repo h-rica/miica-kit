@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog, and this project aims to follow Semantic Versioning once versioned releases begin.
 
+## [0.2.1](https://github.com/h-rica/miica-kit/compare/v0.2.0...v0.2.1) (2026-03-19)
+
+
+### Bug Fixes
+
+* repair docs release override ([1012672](https://github.com/h-rica/miica-kit/commit/101267217b048c080c0b30bd4abf1ce9f38b4590))
+* trigger releases for docs changes ([ad5e393](https://github.com/h-rica/miica-kit/commit/ad5e393d1c763579081ab2d6023b6783b0f71f0a))
+
 ## [0.2.0](https://github.com/h-rica/miica-kit/compare/v0.1.1...v0.2.0) (2026-03-19)
 
 
