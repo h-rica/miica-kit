@@ -33,6 +33,7 @@ The format is based on Keep a Changelog, and this project aims to follow Semanti
 - Public package and CLI naming now use `miica-kit`.
 - Every `miica-*` command now encodes a best-available effort rule so agents are expected to use the strongest relevant combination of tools, evidence, and verification available in their environment.
 - Project uninstall is now conservative with root docs: unchanged kit-managed files are removed or restored, changed files are left in place with manual follow-up guidance.
+- The `release-please` workflow now treats `docs:` commits as patch-release triggers when no `feat`, `fix`, or `deps` commits are present since the last tag.
 
 ### Preserved
 - The internal planning, debug, review, QA, and ship discipline from the original workflow remains the decision engine behind the new commands.

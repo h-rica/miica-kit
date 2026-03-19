@@ -29,7 +29,8 @@ For normal releases, once `release-please` and trusted publishing are configured
 
 Important:
 - `release-please` derives the next version from Conventional Commits, so `feat:` drives a minor bump, `fix:` drives a patch bump, and `!` drives a breaking bump.
-- Docs-only or chore-only changes do not usually open a release PR by themselves.
+- In this repo, `docs:` commits also trigger a patch release when they are the only releasable change type since the last tag.
+- Chore-only changes do not usually open a release PR by themselves.
 - `release-please` needs the repository-level GitHub Actions setting `Allow GitHub Actions to create and approve pull requests` enabled, or it will fail with `GitHub Actions is not permitted to create or approve pull requests`.
 - Manual tag publishing is now a fallback path, not the normal path.
 
@@ -250,9 +251,10 @@ Before expecting it to open release PRs, confirm these GitHub prerequisites:
 That workflow:
 1. runs on pushes to `main`
 2. creates or updates the release PR from Conventional Commits
-3. creates the GitHub release and tag when the release PR is merged
-4. checks out the created tag in the same workflow run
-5. smoke-tests the CLI, previews the tarball, and publishes to npm with trusted publishing
+3. treats `docs:` commits as patch-release triggers when no `feat`, `fix`, or `deps` commits are present since the last tag
+4. creates the GitHub release and tag when the release PR is merged
+5. checks out the created tag in the same workflow run
+6. smoke-tests the CLI, previews the tarball, and publishes to npm with trusted publishing
 
 Publishing in the same workflow run matters because tags created by `release-please` via `GITHUB_TOKEN` do not trigger a second workflow run reliably enough for publication.
 

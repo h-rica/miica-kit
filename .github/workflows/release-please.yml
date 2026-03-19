@@ -16,40 +16,93 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compute docs-only release override
+        id: docs_release
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          last_tag="$(git describe --tags --abbrev=0 2>/dev/null || true)"
+          if [ -n "$last_tag" ]; then
+            range="${last_tag}..HEAD"
+          else
+            range="HEAD"
+          fi
+
+          subjects="$(git log --format=%s $range)"
+          has_docs=false
+          has_releasable=false
+
+          while IFS= read -r subject; do
+            [ -z "$subject" ] && continue
+
+            if [[ "$subject" =~ ^docs(\([^)]+\))?(!)?: ]]; then
+              has_docs=true
+            fi
+
+            if [[ "$subject" =~ ^(feat|fix|deps)(\([^)]+\))?(!)?: ]]; then
+              has_releasable=true
+            fi
+          done <<< "$subjects"
+
+          if [ "$has_docs" != true ] || [ "$has_releasable" = true ]; then
+            echo "release_as=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          current_version="$(node -p "require('./.release-please-manifest.json')['.'] || require('./package.json').version")"
+          IFS='.' read -r major minor patch <<< "$current_version"
+          echo "release_as=${major}.${minor}.$((patch + 1))" >> "$GITHUB_OUTPUT"
+
       - name: Run release-please
-        id: release
+        if: ${{ steps.docs_release.outputs.release_as == '' }}
+        id: release_default
         uses: googleapis/release-please-action@v4
         with:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
 
+      - name: Run release-please for docs-only release
+        if: ${{ steps.docs_release.outputs.release_as != '' }}
+        id: release_docs
+        uses: googleapis/release-please-action@v4
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+          release-as: ${{ steps.docs_release.outputs.release_as }}
+
       # Tags created by release-please use GITHUB_TOKEN, so publish in the same run.
       - name: Check out release tag
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release_default.outputs.release_created == 'true' || steps.release_docs.outputs.release_created == 'true' }}
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ steps.release.outputs.tag_name }}
+          ref: ${{ steps.release_docs.outputs.tag_name || steps.release_default.outputs.tag_name }}
 
       - name: Set up Node.js
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release_default.outputs.release_created == 'true' || steps.release_docs.outputs.release_created == 'true' }}
         uses: actions/setup-node@v4
         with:
           node-version: "24"
           registry-url: "https://registry.npmjs.org"
 
       - name: Upgrade npm for trusted publishing support
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release_default.outputs.release_created == 'true' || steps.release_docs.outputs.release_created == 'true' }}
         run: npm install -g npm@latest
 
       - name: Smoke test CLI
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release_default.outputs.release_created == 'true' || steps.release_docs.outputs.release_created == 'true' }}
         run: node ./bin/miica-kit.mjs help
 
       - name: Preview publish tarball
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release_default.outputs.release_created == 'true' || steps.release_docs.outputs.release_created == 'true' }}
         run: npm pack --dry-run
 
       - name: Publish package
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release_default.outputs.release_created == 'true' || steps.release_docs.outputs.release_created == 'true' }}
         run: npm publish --access public --provenance
