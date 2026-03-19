@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog, and this project aims to follow Semantic Versioning once versioned releases begin.
 
+## [0.2.0](https://github.com/h-rica/miica-kit/compare/v0.1.1...v0.2.0) (2026-03-19)
+
+
+### Features
+
+* add knowledge skill ([6e41dde](https://github.com/h-rica/miica-kit/commit/6e41dde8c67172a99b405ba45a5cde7f7a4a0847))
+
 ## [Unreleased]
 
 ### Fixed
