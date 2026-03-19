@@ -196,6 +196,7 @@ Expected behavior:
 - creates a dedicated `knowledge-base/<topic-slug>/` folder
 - explains the topic for mixed audiences without drowning non-technical readers in jargon
 - includes sources, caveats, and practical guidance
+- see the canonical example in [`knowledge-base/npm-package-publishing-with-github-actions/`](./knowledge-base/npm-package-publishing-with-github-actions/README.md)
 
 ### Example 4: You want a read-only review
 
@@ -472,6 +473,7 @@ The difference is that you do not have to think in fifteen micro-modes every day
 - [`CHANGELOG.md`](./CHANGELOG.md): notable kit changes
 - [`ROLES.md`](./ROLES.md): extracted internal roles from the original workflow
 - [`WORKFLOW.md`](./WORKFLOW.md): public workflow and command-routing rules
+- [`knowledge-base/npm-package-publishing-with-github-actions/`](./knowledge-base/npm-package-publishing-with-github-actions/README.md): canonical `miica-knowledge` example for npm package publishing with GitHub Actions
 - [`skills/`](./skills): six portable public commands
 - [`codex-skills/`](./codex-skills): six installable skill folders for Codex and `.agents`
 - [`claude-skills/`](./claude-skills): six installable skill folders for Claude

@@ -8,11 +8,12 @@ The format is based on Keep a Changelog, and this project aims to follow Semanti
 
 ### Fixed
 - Publishing metadata now points to the actual GitHub repository `h-rica/miica-kit` instead of the old `miica-labs` path.
-- Publishing instructions now document npm's current requirement for account 2FA or a granular token with `Bypass 2FA`, clarify that trusted publishing comes after the first successful manual publish, include the exact `npm trust github` setup and verification commands, add a minimal release runbook, keep license metadata aligned with the chosen MIT license, and now describe the `release-please` based release flow.
+- Publishing instructions now document npm's current requirement for account 2FA or a granular token with `Bypass 2FA`, clarify that trusted publishing comes after the first successful manual publish, include the exact `npm trust github` setup and verification commands, add a minimal release runbook, document the GitHub Actions permission needed for `release-please` to open PRs, keep license metadata aligned with the chosen MIT license, and now describe the `release-please` based release flow.
 
 ### Added
 - Six-command public skill surface: `miica-plan`, `miica-fix-issue`, `miica-documentation`, `miica-knowledge`, `miica-analyse`, and `miica-implementation`.
 - New `miica-knowledge` portable and installable skill surfaces for teachable, source-backed knowledge-base creation.
+- Canonical `knowledge-base/npm-package-publishing-with-github-actions/` example with layered outputs, dated sources, and a root README link so the repo now shows what `miica-knowledge` actually produces.
 - Project and global installers now support the simplified `miica-*` command model.
 - Symmetric uninstall commands for project-local installs, Codex skills, Claude skills, and `.agents` skills.
 - A `claude-skills/` surface mirroring the installable `miica-*` skill folders for Claude.
