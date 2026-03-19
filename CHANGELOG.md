@@ -25,6 +25,7 @@ The format is based on Keep a Changelog, and this project aims to follow Semanti
 - Publishing metadata now points to the actual GitHub repository `h-rica/miica-kit` instead of the old `miica-labs` path.
 - Publishing instructions now document npm's current requirement for account 2FA or a granular token with `Bypass 2FA`, clarify that trusted publishing comes after the first successful manual publish, include the exact `npm trust github` setup and verification commands, add a minimal release runbook, document the GitHub Actions permission needed for `release-please` to open PRs, keep license metadata aligned with the chosen MIT license, and now describe the `release-please` based release flow.
 - The docs-only release override in `.github/workflows/release-please.yml` no longer uses bash regex parsing that fails under GitHub Actions.
+- The release and fallback publish workflows now use `actions/setup-node@v6` so npm publish runs match the current action major version documented by the project.
 
 ### Added
 - Six-command public skill surface: `miica-plan`, `miica-fix-issue`, `miica-documentation`, `miica-knowledge`, `miica-analyse`, and `miica-implementation`.
