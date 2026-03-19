@@ -30,6 +30,7 @@ For normal releases, once `release-please` and trusted publishing are configured
 Important:
 - `release-please` derives the next version from Conventional Commits, so `feat:` drives a minor bump, `fix:` drives a patch bump, and `!` drives a breaking bump.
 - Docs-only or chore-only changes do not usually open a release PR by themselves.
+- `release-please` needs the repository-level GitHub Actions setting `Allow GitHub Actions to create and approve pull requests` enabled, or it will fail with `GitHub Actions is not permitted to create or approve pull requests`.
 - Manual tag publishing is now a fallback path, not the normal path.
 
 ## Current Recommended Identity
@@ -241,6 +242,11 @@ The secure end state is:
 
 This repo now uses `.github/workflows/release-please.yml` as the normal release path.
 
+Before expecting it to open release PRs, confirm these GitHub prerequisites:
+- the workflow file keeps `contents: write`, `issues: write`, and `pull-requests: write`
+- repository settings allow GitHub Actions to create and approve pull requests
+- if the repository belongs to an organization or enterprise, no higher-level policy overrides that setting
+
 That workflow:
 1. runs on pushes to `main`
 2. creates or updates the release PR from Conventional Commits
@@ -249,6 +255,18 @@ That workflow:
 5. smoke-tests the CLI, previews the tarball, and publishes to npm with trusted publishing
 
 Publishing in the same workflow run matters because tags created by `release-please` via `GITHUB_TOKEN` do not trigger a second workflow run reliably enough for publication.
+
+If you hit this exact error:
+
+```text
+release-please failed: GitHub Actions is not permitted to create or approve pull requests.
+```
+
+fix it in GitHub at:
+- repository: `Settings -> Actions -> General -> Workflow permissions -> Allow GitHub Actions to create and approve pull requests`
+- organization, if applicable: `Organization Settings -> Actions -> General -> Workflow permissions -> Allow GitHub Actions to create and approve pull requests`
+
+If you intentionally do not want to enable that setting, the fallback is to give `release-please` a dedicated PAT secret and pass it with the action `token` input.
 
 ## Manual Tag Or Dispatch Fallback
 
