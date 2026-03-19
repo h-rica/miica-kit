@@ -1,0 +1,55 @@
+name: Release Please
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run release-please
+        id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+      # Tags created by release-please use GITHUB_TOKEN, so publish in the same run.
+      - name: Check out release tag
+        if: ${{ steps.release.outputs.release_created }}
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ steps.release.outputs.tag_name }}
+
+      - name: Set up Node.js
+        if: ${{ steps.release.outputs.release_created }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Upgrade npm for trusted publishing support
+        if: ${{ steps.release.outputs.release_created }}
+        run: npm install -g npm@latest
+
+      - name: Smoke test CLI
+        if: ${{ steps.release.outputs.release_created }}
+        run: node ./bin/miica-kit.mjs help
+
+      - name: Preview publish tarball
+        if: ${{ steps.release.outputs.release_created }}
+        run: npm pack --dry-run
+
+      - name: Publish package
+        if: ${{ steps.release.outputs.release_created }}
+        run: npm publish --access public --provenance

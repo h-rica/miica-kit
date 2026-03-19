@@ -19,24 +19,18 @@ So there is no separate Bun registry or pnpm registry publish step for this pack
 
 ## Minimal Release Runbook
 
-For normal releases, once trusted publishing is configured, use this exact flow:
+For normal releases, once `release-please` and trusted publishing are configured, use this flow:
 
-```bash
-npm version patch
-git push origin main --follow-tags
-```
+1. Merge conventional commits into `main`.
+2. Wait for the `Release Please` workflow to open or update the release PR.
+3. Review and merge that release PR when you want to ship.
+4. Verify the `Release Please` workflow succeeded and the new version is visible on `https://www.npmjs.com/package/@hrica/miica-kit`.
+5. Smoke test from a folder outside this repo with `npx @hrica/miica-kit help`.
 
-Then verify:
-- the GitHub Actions workflow `Publish Package` succeeded
-- the new version is visible on `https://www.npmjs.com/package/@hrica/miica-kit`
-- `npx @hrica/miica-kit help` works from a folder outside this repo
-
-If you prefer to control the version tag manually, this is equivalent:
-
-```bash
-git tag v0.1.2
-git push origin v0.1.2
-```
+Important:
+- `release-please` derives the next version from Conventional Commits, so `feat:` drives a minor bump, `fix:` drives a patch bump, and `!` drives a breaking bump.
+- Docs-only or chore-only changes do not usually open a release PR by themselves.
+- Manual tag publishing is now a fallback path, not the normal path.
 
 ## Current Recommended Identity
 
@@ -243,32 +237,31 @@ The secure end state is:
 - 2FA required
 - token publishing disabled when you no longer need it
 
-## Publish With Git Tags Using GitHub Actions
+## Automatic Releases With Release Please
 
-Once trusted publishing is configured, the included workflow can publish automatically.
+This repo now uses `.github/workflows/release-please.yml` as the normal release path.
 
-This repo uses:
-- workflow file: `.github/workflows/publish.yml`
+That workflow:
+1. runs on pushes to `main`
+2. creates or updates the release PR from Conventional Commits
+3. creates the GitHub release and tag when the release PR is merged
+4. checks out the created tag in the same workflow run
+5. smoke-tests the CLI, previews the tarball, and publishes to npm with trusted publishing
+
+Publishing in the same workflow run matters because tags created by `release-please` via `GITHUB_TOKEN` do not trigger a second workflow run reliably enough for publication.
+
+## Manual Tag Or Dispatch Fallback
+
+This repo still keeps `.github/workflows/publish.yml` as a fallback path.
+
+Fallback workflow details:
+- workflow name: `Publish Package Fallback`
 - trigger: Git tag push matching `v*`
+- manual trigger: `workflow_dispatch`
 - runner: `ubuntu-latest`
 - OIDC permission: `id-token: write`
 
-The workflow does this:
-1. checks out the repo
-2. sets up Node 24
-3. upgrades npm to a version that supports trusted publishing
-4. smoke-tests the CLI
-5. runs `npm pack --dry-run`
-6. publishes with `npm publish --access public --provenance`
-
-To trigger a release publish:
-
-```bash
-git tag v0.1.0
-git push origin v0.1.0
-```
-
-You can also trigger the workflow manually from GitHub because `workflow_dispatch` is enabled.
+Use this fallback only when you intentionally want to publish from a manual tag push or from the Actions UI.
 
 ## Verify The Publish
 
@@ -298,17 +291,17 @@ pnpm dlx @hrica/miica-kit help
 If all three work, the publish is good.
 
 ## Publishing Updates Later
-Every time you publish a new version:
+For normal releases after this setup:
 
-1. update `package.json` `version`
-2. review `npm pack --dry-run`
-3. publish again
+1. keep merging Conventional Commits into `main`
+2. review and merge the release PR opened by `release-please`
+3. verify the GitHub release, npm package page, and one runner smoke test (`npx`, `bunx`, or `pnpm dlx`)
 
-Example:
+Manual fallback example:
 
 ```bash
-npm version patch
-npm publish --access public
+git tag v0.1.2
+git push origin v0.1.2
 ```
 
 ## Strongly Recommended After The First Manual Publish
@@ -327,13 +320,13 @@ If you plan to release from GitHub Actions, trusted publishing is the right long
 Use this checklist each time:
 
 1. Make sure the package name is correct in `package.json`.
-2. Make sure the version is bumped.
+2. Make sure release-worthy commits use Conventional Commits so `release-please` can infer the next version correctly.
 3. Make sure the CLI still works with `node ./bin/miica-kit.mjs help`.
-4. Run `npm pack --dry-run`.
-5. Run `npm whoami`.
-6. Make sure the license metadata stays aligned: the repo should keep a top-level `LICENSE` file plus a matching `package.json` `license` field.
-7. If this is the first release, publish manually with `npm publish --access public` after enabling 2FA or preparing a granular token with `Bypass 2FA`.
-8. For ongoing releases, push a `v*` tag to trigger `.github/workflows/publish.yml`.
+4. Run `npm pack --dry-run` when packaging behavior changed materially.
+5. Make sure the license metadata stays aligned: the repo should keep a top-level `LICENSE` file plus a matching `package.json` `license` field.
+6. If this is the first release in a fresh repo, publish manually with `npm publish --access public` after enabling 2FA or preparing a granular token with `Bypass 2FA`.
+7. For ongoing releases here, merge the release PR opened by `.github/workflows/release-please.yml`.
+8. Use `.github/workflows/publish.yml` only as a fallback path for a manual tag push or manual dispatch.
 9. Verify `npx`, `bunx`, and `pnpm dlx` from outside the repo.
 
 ## Official References
@@ -346,5 +339,7 @@ Use this checklist each time:
 - npm access tokens: [About access tokens](https://docs.npmjs.com/about-access-tokens/)
 - npm trusted publishing: [Trusted publishing for npm packages](https://docs.npmjs.com/trusted-publishers/)
 - npm trusted publisher CLI: [npm trust](https://docs.npmjs.com/cli/v11/commands/npm-trust/)
+- release-please action: [googleapis/release-please-action](https://github.com/googleapis/release-please-action)
+- release-please manifest config: [manifest-releaser.md](https://github.com/googleapis/release-please/blob/main/docs/manifest-releaser.md)
 - Bun package runner: [bunx](https://bun.sh/docs/pm/bunx)
 - pnpm package runner: [pnpm dlx](https://pnpm.io/cli/dlx)
