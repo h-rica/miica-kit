@@ -171,7 +171,34 @@ then the npm login session is valid, but the publishing credentials are still in
 
 This step comes after the first successful manual publish. npm trusted publisher configuration requires the package to already exist on the registry.
 
-On npmjs.com, open the package settings for `@hrica/miica-kit` and configure a trusted publisher with:
+Before running the trust command, make sure [`.github/workflows/publish.yml`](./.github/workflows/publish.yml) is committed and pushed to GitHub.
+
+If your local npm is older than `11.10.0`, use `npx` to run a current npm temporarily:
+
+```bash
+npx npm@11.11.1 trust github @hrica/miica-kit --repo h-rica/miica-kit --file publish.yml -y
+```
+
+If your local npm is already recent enough, the equivalent command is:
+
+```bash
+npm trust github @hrica/miica-kit --repo h-rica/miica-kit --file publish.yml -y
+```
+
+During that command, npm will require a browser-based 2FA confirmation for the trust operation. Open the URL that npm prints, complete the confirmation on npmjs.com, then verify the relationship:
+
+```bash
+npx npm@11.11.1 trust list @hrica/miica-kit --json
+```
+
+Expected configuration:
+- provider: GitHub Actions
+- package: `@hrica/miica-kit`
+- repository: `h-rica/miica-kit`
+- workflow filename: `publish.yml`
+- environment name: empty unless you later add a protected GitHub environment
+
+You can also configure the same relationship from the npm website package settings for `@hrica/miica-kit` using:
 - Organization or user: `h-rica`
 - Repository: `miica-kit`
 - Workflow filename: `publish.yml`
