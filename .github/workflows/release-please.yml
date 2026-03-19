@@ -41,13 +41,17 @@ jobs:
           while IFS= read -r subject; do
             [ -z "$subject" ] && continue
 
-            if [[ "$subject" =~ ^docs(\([^)]+\))?(!)?: ]]; then
-              has_docs=true
-            fi
+            case "$subject" in
+              docs:*|docs\(*\):*|docs!:*|docs\(*\)!:*)
+                has_docs=true
+                ;;
+            esac
 
-            if [[ "$subject" =~ ^(feat|fix|deps)(\([^)]+\))?(!)?: ]]; then
-              has_releasable=true
-            fi
+            case "$subject" in
+              feat:*|feat\(*\):*|feat!:*|feat\(*\)!:*|fix:*|fix\(*\):*|fix!:*|fix\(*\)!:*|deps:*|deps\(*\):*|deps!:*|deps\(*\)!:*)
+                has_releasable=true
+                ;;
+            esac
           done <<< "$subjects"
 
           if [ "$has_docs" != true ] || [ "$has_releasable" = true ]; then
