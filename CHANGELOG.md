@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog, and this project aims to follow Semantic Versioning once versioned releases begin.
 
+## [0.2.2](https://github.com/h-rica/miica-kit/compare/v0.2.1...v0.2.2) (2026-03-19)
+
+
+### Bug Fixes
+
+* align npm publish workflows ([c99bf3c](https://github.com/h-rica/miica-kit/commit/c99bf3cd3a5ec3cf58424e24d505e950264f8a64))
+
 ## [0.2.1](https://github.com/h-rica/miica-kit/compare/v0.2.0...v0.2.1) (2026-03-19)
 
 
