@@ -43,7 +43,7 @@ $Selected = if ($Skills.Count -gt 0) {
         $Wanted = $Skill.ToLowerInvariant()
         $Match = $Available | Where-Object { $_.Name.ToLowerInvariant() -eq $Wanted }
         if (-not $Match) {
-            throw "No Claude skill matched '$Skill'. Use exact names like miica-plan, miica-fix-issue, miica-documentation, miica-analyse, or miica-implementation."
+            throw "No Claude skill matched '$Skill'. Use exact names like miica-plan, miica-fix-issue, miica-documentation, miica-knowledge, miica-analyse, or miica-implementation."
         }
         $Match
     }

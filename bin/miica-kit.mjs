@@ -18,14 +18,14 @@ function usage() {
   console.log(`miica-kit
 
 Usage:
-  miica-kit install-kit [target] [--mode direct|modular] [--skills miica-plan,miica-analyse] [--force]
+  miica-kit install-kit [target] [--mode direct|modular] [--skills miica-plan,miica-knowledge] [--force]
   miica-kit uninstall-kit [target]
-  miica-kit install-codex-skills [target-dir] [--skills miica-plan,miica-fix-issue] [--force]
-  miica-kit uninstall-codex-skills [target-dir] [--skills miica-plan,miica-fix-issue]
-  miica-kit install-claude-skills [target-dir] [--skills miica-plan,miica-fix-issue] [--force]
-  miica-kit uninstall-claude-skills [target-dir] [--skills miica-plan,miica-fix-issue]
-  miica-kit install-agent-skills [target-dir] [--skills miica-plan,miica-fix-issue] [--force]
-  miica-kit uninstall-agent-skills [target-dir] [--skills miica-plan,miica-fix-issue]
+  miica-kit install-codex-skills [target-dir] [--skills miica-plan,miica-fix-issue,miica-knowledge] [--force]
+  miica-kit uninstall-codex-skills [target-dir] [--skills miica-plan,miica-fix-issue,miica-knowledge]
+  miica-kit install-claude-skills [target-dir] [--skills miica-plan,miica-fix-issue,miica-knowledge] [--force]
+  miica-kit uninstall-claude-skills [target-dir] [--skills miica-plan,miica-fix-issue,miica-knowledge]
+  miica-kit install-agent-skills [target-dir] [--skills miica-plan,miica-fix-issue,miica-knowledge] [--force]
+  miica-kit uninstall-agent-skills [target-dir] [--skills miica-plan,miica-fix-issue,miica-knowledge]
   miica-kit help
 
 Notes:
@@ -350,7 +350,7 @@ Recommended merge block for the project's AGENTS.md:
 ## Portable Agent Kit
 
 Use ./.agent-kit/WORKFLOW.md for supplemental workflow guidance.
-Use ./.agent-kit/skills/ when a task maps cleanly to one of the public commands, especially miica-plan, miica-analyse, miica-fix-issue, and miica-implementation.
+Use ./.agent-kit/skills/ when a task maps cleanly to one of the public commands, especially miica-plan, miica-knowledge, miica-analyse, miica-fix-issue, and miica-implementation.
 Use ./MEMORY.md for durable project memory when the repository keeps one.
 Keep ./CHANGELOG.md current for notable shipped changes.
 If there is any conflict, the project-specific AGENTS.md rules win over the generic portable kit.
@@ -555,7 +555,7 @@ function installKit(options) {
     : options.skills.map((wanted) => {
         const match = availableSkillFiles.find((file) => portableSkillName(file) === wanted);
         if (!match) {
-          fail(`No skill file matched '${wanted}'. Use exact portable skill names such as miica-plan, miica-fix-issue, miica-documentation, miica-analyse, or miica-implementation.`);
+          fail(`No skill file matched '${wanted}'. Use exact portable skill names such as miica-plan, miica-fix-issue, miica-documentation, miica-knowledge, miica-analyse, or miica-implementation.`);
         }
         return match;
       });
@@ -737,7 +737,7 @@ function selectInstallableSkills(requested, label, sourceDirName) {
   return requested.map((wanted) => {
     const match = available.find((entry) => entry === wanted);
     if (!match) {
-      fail(`No ${label} skill matched '${wanted}'. Use exact names like miica-plan, miica-fix-issue, miica-documentation, miica-analyse, or miica-implementation.`);
+      fail(`No ${label} skill matched '${wanted}'. Use exact names like miica-plan, miica-fix-issue, miica-documentation, miica-knowledge, miica-analyse, or miica-implementation.`);
     }
     return match;
   });
