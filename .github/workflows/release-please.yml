@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -83,7 +83,7 @@ jobs:
       # Tags created by release-please use GITHUB_TOKEN, so publish in the same run.
       - name: Check out release tag
         if: ${{ steps.release_default.outputs.release_created == 'true' || steps.release_docs.outputs.release_created == 'true' }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           ref: ${{ steps.release_docs.outputs.tag_name || steps.release_default.outputs.tag_name }}
