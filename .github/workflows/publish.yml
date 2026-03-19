@@ -1,0 +1,36 @@
+name: Publish Package
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Upgrade npm for trusted publishing support
+        run: npm install -g npm@latest
+
+      - name: Smoke test CLI
+        run: node ./bin/miica-kit.mjs help
+
+      - name: Preview publish tarball
+        run: npm pack --dry-run
+
+      - name: Publish package
+        run: npm publish --access public --provenance

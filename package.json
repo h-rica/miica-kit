@@ -1,0 +1,48 @@
+{
+  "name": "@hrica/miica-kit",
+  "version": "0.1.0",
+  "description": "Portable workflow kit with a compact command surface and install commands for Codex, Claude, and .agents.",
+  "type": "module",
+  "bin": {
+    "miica-kit": "bin/miica-kit.mjs",
+    "miica-agent-kit": "bin/miica-kit.mjs"
+  },
+  "files": [
+    "AGENTS.md",
+    "MEMORY.md",
+    "CHANGELOG.md",
+    "ROLES.md",
+    "WORKFLOW.md",
+    "README.md",
+    "PUBLISHING.md",
+    "templates/",
+    "skills/",
+    "codex-skills/",
+    "claude-skills/",
+    "scripts/",
+    "bin/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/h-rica/miica-kit.git"
+  },
+  "homepage": "https://github.com/h-rica/miica-kit#readme",
+  "bugs": {
+    "url": "https://github.com/h-rica/miica-kit/issues"
+  },
+  "keywords": [
+    "ai",
+    "agents",
+    "codex",
+    "claude",
+    "workflow",
+    "vibe-coding",
+    "developer-tools"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
