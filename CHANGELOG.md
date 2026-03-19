@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog, and this project aims to follow Semantic Versioning once versioned releases begin.
 
+## [0.3.0](https://github.com/h-rica/miica-kit/compare/v0.2.3...v0.3.0) (2026-03-19)
+
+
+### Features
+
+* add deep dive command ([64ca230](https://github.com/h-rica/miica-kit/commit/64ca2307669f1bbc5581eea72fae885fe99f4a19))
+
 ## [0.2.3](https://github.com/h-rica/miica-kit/compare/v0.2.2...v0.2.3) (2026-03-19)
 
 
