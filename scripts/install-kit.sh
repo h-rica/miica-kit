@@ -70,7 +70,7 @@ Recommended merge block for the project's AGENTS.md:
 ## Portable Agent Kit
 
 Use ./.agent-kit/WORKFLOW.md for supplemental workflow guidance.
-Use ./.agent-kit/skills/ when a task maps cleanly to one of the public commands, especially miica-plan, miica-knowledge, miica-analyse, miica-fix-issue, and miica-implementation.
+Use ./.agent-kit/skills/ when a task maps cleanly to one of the public commands, especially miica-plan, miica-knowledge, miica-deep-dive, miica-analyse, miica-fix-issue, and miica-implementation.
 Use ./MEMORY.md for durable project memory when the repository keeps one.
 Keep ./CHANGELOG.md current for notable shipped changes.
 If there is any conflict, the project-specific AGENTS.md rules win over the generic portable kit.
@@ -249,7 +249,7 @@ case "$MODE" in
           fi
         done
         if [ "$matched" -eq 0 ]; then
-          echo "No skill file matched '$filter'. Use an exact portable skill name such as miica-plan, miica-fix-issue, miica-documentation, miica-knowledge, miica-analyse, or miica-implementation." >&2
+          echo "No skill file matched '$filter'. Use an exact portable skill name such as miica-plan, miica-fix-issue, miica-documentation, miica-knowledge, miica-deep-dive, miica-analyse, or miica-implementation." >&2
           exit 1
         fi
       done

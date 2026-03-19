@@ -26,6 +26,7 @@ Durable memory for `miica-kit`.
 - Installable global skills live in `codex-skills/` and `claude-skills/` and use the same `miica-*` names.
 - Public command count should stay small unless there is a strong reason to expand it.
 - `miica-knowledge` is the reserved public command for pedagogical, audience-layered topic guides; do not fold that workflow back into repo documentation.
+- `miica-deep-dive` is the reserved public command for broad, current, dossier-style research on technologies, products, platforms, vendors, and ecosystems.
 
 ## Documentation defaults
 

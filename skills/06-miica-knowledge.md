@@ -2,12 +2,12 @@
 
 ## Role
 
-Knowledge-base creation command for teachable topics.
+Knowledge-base creation command for targeted, teachable topics.
 
 ## Use when
 
 - the user asks for a knowledge base, explainer, primer, onboarding pack, or learning dossier
-- the topic may be repo-specific, domain-specific, or ecosystem-specific
+- the topic is bounded enough to teach clearly in one focused guide
 - the result should work for both non-technical and technical readers
 
 ## Goal
@@ -44,4 +44,5 @@ Apply the minimum sufficient sequence:
 - separate source-backed facts from recommendations
 - avoid unexplained jargon and insider shorthand
 - prefer durable structure over long unstructured notes
+- if the request is really a broad, current dossier on a technology, product, platform, vendor, or ecosystem, switch to `miica-deep-dive`
 - if the topic is current, policy-sensitive, or tool-version-sensitive, verify externally before writing

@@ -11,6 +11,7 @@ The public commands in this kit are:
 - `miica-fix-issue`
 - `miica-documentation`
 - `miica-knowledge`
+- `miica-deep-dive`
 - `miica-analyse`
 - `miica-implementation`
 
@@ -85,7 +86,19 @@ This command may combine:
 - practitioner guidance for technical readers
 - glossary, FAQ, and sources writing
 
-### 5. miica-analyse
+### 5. miica-deep-dive
+
+Use when the user wants a broad, current deep dive on a technology, product, platform, vendor, or ecosystem.
+
+This command may combine:
+- current research
+- source gathering and verification
+- browser-based inspection of dynamic pages when necessary
+- product, API, integration, and ecosystem analysis
+- market comparison and positioning
+- executive synthesis plus practitioner-oriented guidance
+
+### 6. miica-analyse
 
 Use when the user wants investigation, review, diagnosis, assessment, or comparison without code changes.
 
@@ -100,7 +113,7 @@ This command may combine read-only:
 `miica-analyse` is a hard phase boundary.
 Do not modify files in this mode unless the same user message explicitly asks to continue.
 
-### 6. miica-implementation
+### 7. miica-implementation
 
 Use when the user wants software built or changed end-to-end and the task is primarily implementation rather than bug fixing or documentation.
 
@@ -119,7 +132,8 @@ If the user does not name a command, infer the best one:
 - fuzzy scope or architecture question: `miica-plan`
 - bug or regression: `miica-fix-issue`
 - docs work: `miica-documentation`
-- knowledge base, explainer, primer, onboarding pack, or learning dossier: `miica-knowledge`
+- knowledge base, explainer, primer, onboarding pack, or focused learning dossier: `miica-knowledge`
+- broad, current deep dive on a technology, product, platform, vendor, or ecosystem: `miica-deep-dive`
 - investigation or review request: `miica-analyse`
 - feature or behavior change: `miica-implementation`
 
@@ -163,6 +177,7 @@ For current external information or browser-dependent behavior:
 - `miica-fix-issue`: reproduce, investigate, verify, review, and regression-protect with the strongest available stack
 - `miica-documentation`: inspect real code, commands, and behavior before editing docs
 - `miica-knowledge`: gather authoritative sources, structure layered teaching material, and make the topic understandable for mixed audiences
+- `miica-deep-dive`: gather authoritative sources, verify current facts, inspect dynamic pages with browser tooling when needed, and synthesize a broad dossier
 - `miica-analyse`: gather maximum relevant evidence, but remain read-only
 - `miica-implementation`: use the minimum planning needed, then implement, review, QA, verify, and sync docs when warranted
 

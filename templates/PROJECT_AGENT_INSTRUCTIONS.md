@@ -19,11 +19,12 @@ Apply a direct senior-engineering stance on every non-trivial task:
 
 ## Public command surface
 
-This kit intentionally exposes only six public commands:
+This kit intentionally exposes only seven public commands:
 - `miica-plan`
 - `miica-fix-issue`
 - `miica-documentation`
 - `miica-knowledge`
+- `miica-deep-dive`
 - `miica-analyse`
 - `miica-implementation`
 
@@ -32,7 +33,8 @@ This kit intentionally exposes only six public commands:
 - `miica-plan`: planning, scoping, sequencing, architecture direction, or a plain plan request
 - `miica-fix-issue`: bug, issue, regression, broken flow, or failing test
 - `miica-documentation`: docs creation, docs updates, README, MEMORY, CHANGELOG, architecture or testing docs
-- `miica-knowledge`: knowledge base, explainer, primer, onboarding pack, or learning dossier on a topic
+- `miica-knowledge`: knowledge base, explainer, primer, onboarding pack, or focused learning dossier on a topic
+- `miica-deep-dive`: broad, current deep dive on a technology, product, platform, vendor, or ecosystem
 - `miica-analyse`: investigation, review, diagnosis, comparison, or read-only assessment
 - `miica-implementation`: feature work or non-trivial behavior changes end-to-end
 
@@ -107,6 +109,7 @@ Escalate effort until one of these is true:
 - `miica-fix-issue`: reproduce, investigate, verify, review, and regression-protect with the strongest available stack
 - `miica-documentation`: inspect real code, commands, and behavior before editing docs
 - `miica-knowledge`: gather authoritative sources, structure layered teaching material, and make the topic understandable for mixed audiences
+- `miica-deep-dive`: gather authoritative sources, verify current facts, inspect dynamic pages with browser tooling when needed, and synthesize a broad dossier
 - `miica-analyse`: gather maximum relevant evidence, but remain read-only
 - `miica-implementation`: use the minimum planning needed, then implement, review, QA, verify, and sync docs when warranted
 
