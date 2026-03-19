@@ -17,6 +17,27 @@ You only need to publish to the **npm registry** for all three of those commands
 
 So there is no separate Bun registry or pnpm registry publish step for this package.
 
+## Minimal Release Runbook
+
+For normal releases, once trusted publishing is configured, use this exact flow:
+
+```bash
+npm version patch
+git push origin main --follow-tags
+```
+
+Then verify:
+- the GitHub Actions workflow `Publish Package` succeeded
+- the new version is visible on `https://www.npmjs.com/package/@hrica/miica-kit`
+- `npx @hrica/miica-kit help` works from a folder outside this repo
+
+If you prefer to control the version tag manually, this is equivalent:
+
+```bash
+git tag v0.1.2
+git push origin v0.1.2
+```
+
 ## Current Recommended Identity
 
 The repo is prepared for this setup:
@@ -58,6 +79,10 @@ The repo is already prepared with these publishing fields:
 - `bugs`
 - `keywords`
 - `publishConfig.access = public`
+
+Licensing note:
+- this repo now ships a top-level `LICENSE` file and `package.json` `license` field set to `MIT`
+- keep those two in sync if the licensing decision ever changes
 
 The main thing to verify is that the final GitHub repo URL really is:
 
@@ -306,9 +331,10 @@ Use this checklist each time:
 3. Make sure the CLI still works with `node ./bin/miica-kit.mjs help`.
 4. Run `npm pack --dry-run`.
 5. Run `npm whoami`.
-6. If this is the first release, publish manually with `npm publish --access public` after enabling 2FA or preparing a granular token with `Bypass 2FA`.
-7. For ongoing releases, push a `v*` tag to trigger `.github/workflows/publish.yml`.
-8. Verify `npx`, `bunx`, and `pnpm dlx` from outside the repo.
+6. Make sure the license metadata stays aligned: the repo should keep a top-level `LICENSE` file plus a matching `package.json` `license` field.
+7. If this is the first release, publish manually with `npm publish --access public` after enabling 2FA or preparing a granular token with `Bypass 2FA`.
+8. For ongoing releases, push a `v*` tag to trigger `.github/workflows/publish.yml`.
+9. Verify `npx`, `bunx`, and `pnpm dlx` from outside the repo.
 
 ## Official References
 

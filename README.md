@@ -473,6 +473,10 @@ The difference is that you do not have to think in fifteen micro-modes every day
 
 If you want to publish this package so it can be used with `npx`, `bunx`, or `pnpm dlx` from anywhere, see [PUBLISHING.md](./PUBLISHING.md).
 
+## License
+
+This project is licensed under the MIT License. See [LICENSE](./LICENSE).
+
 ## Practical Rule
 
 Do not treat this repo as a framework.
