@@ -43,8 +43,9 @@ The format is based on Keep a Changelog, and this project aims to follow Semanti
 - The release and fallback publish workflows now use `actions/checkout@v5` so the publish path no longer relies on the deprecated Node 20 checkout action.
 
 ### Added
-- Six-command public skill surface: `miica-plan`, `miica-fix-issue`, `miica-documentation`, `miica-knowledge`, `miica-analyse`, and `miica-implementation`.
+- Seven-command public skill surface: `miica-plan`, `miica-fix-issue`, `miica-documentation`, `miica-knowledge`, `miica-deep-dive`, `miica-analyse`, and `miica-implementation`.
 - New `miica-knowledge` portable and installable skill surfaces for teachable, source-backed knowledge-base creation.
+- New `miica-deep-dive` portable and installable skill surfaces for broad, current, dossier-style research on technologies, products, platforms, vendors, and ecosystems.
 - Canonical `knowledge-base/npm-package-publishing-with-github-actions/` example with layered outputs, dated sources, and a root README link so the repo now shows what `miica-knowledge` actually produces.
 - Project and global installers now support the simplified `miica-*` command model.
 - Symmetric uninstall commands for project-local installs, Codex skills, Claude skills, and `.agents` skills.
@@ -54,7 +55,7 @@ The format is based on Keep a Changelog, and this project aims to follow Semanti
 ### Changed
 - `miica-se` is now an always-on posture inside `AGENTS.md` and project templates instead of a separate public skill.
 - The old phase-by-phase internal skills are no longer the public install surface.
-- README, workflow docs, and project instructions now route work through the six-command model.
+- README, workflow docs, and project instructions now route work through the seven-command model.
 - Public package and CLI naming now use `miica-kit`.
 - Every `miica-*` command now encodes a best-available effort rule so agents are expected to use the strongest relevant combination of tools, evidence, and verification available in their environment.
 - Project uninstall is now conservative with root docs: unchanged kit-managed files are removed or restored, changed files are left in place with manual follow-up guidance.

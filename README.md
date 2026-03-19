@@ -15,21 +15,22 @@ This README uses `pnpm dlx` for pnpm examples because that is the documented pnp
 
 [!NOTE]
 > You do **not** need to be highly technical to use this kit.
-> In the simplest form, you install it and then ask your agent to use one of six commands:
-> `miica-plan`, `miica-fix-issue`, `miica-documentation`, `miica-knowledge`, `miica-analyse`, or `miica-implementation`.
+> In the simplest form, you install it and then ask your agent to use one of seven commands:
+> `miica-plan`, `miica-fix-issue`, `miica-documentation`, `miica-knowledge`, `miica-deep-dive`, `miica-analyse`, or `miica-implementation`.
 
 ## What It Does
 
-Instead of exposing a long list of micro-modes, the kit reduces daily work to six commands:
+Instead of exposing a long list of micro-modes, the kit reduces daily work to seven commands:
 
 - `miica-plan`
 - `miica-fix-issue`
 - `miica-documentation`
 - `miica-knowledge`
+- `miica-deep-dive`
 - `miica-analyse`
 - `miica-implementation`
 
-Behind those six commands, the kit still keeps the useful discipline:
+Behind those seven commands, the kit still keeps the useful discipline:
 - challenge bad scope before coding
 - debug before patching
 - review for real risk, not style theater
@@ -65,14 +66,15 @@ What changes is the behavior:
 - it combines review, QA, browser checks, docs sync, research, and verification more intelligently
 - it stops when a command is supposed to stay read-only or plan-only
 
-## The Six Commands
+## The Seven Commands
 
 | Command | In plain English | Use it when... | What it may combine |
 |---|---|---|---|
 | `miica-plan` | Think before building | the task is fuzzy, risky, or needs sequencing | scope review, engineering review, design planning |
 | `miica-fix-issue` | Fix something broken | there is a bug, regression, failing flow, or broken test | debug, reproduction, implementation, review, QA |
 | `miica-documentation` | Make the docs match reality | docs are missing, stale, or inconsistent | README, MEMORY, CHANGELOG, workflow docs |
-| `miica-knowledge` | Build a teachable knowledge base | you want a primer, explainer, onboarding pack, or topic guide | research, source gathering, executive summary, practitioner guide, glossary, FAQ |
+| `miica-knowledge` | Build a teachable knowledge base | you want a primer, explainer, onboarding pack, or focused topic guide | research, source gathering, executive summary, practitioner guide, glossary, FAQ |
+| `miica-deep-dive` | Go deep on a technology or product | you want a broad, current view of a technology, product, platform, vendor, or ecosystem | research, current verification, browser inspection, API and integration analysis, comparison, executive summary |
 | `miica-analyse` | Investigate without changing code | you want diagnosis, review, comparison, or assessment | read-only review, architecture analysis, QA-only, browser evidence |
 | `miica-implementation` | Build something end to end | the task is primarily feature delivery | light planning, implementation, review, QA, docs sync |
 
@@ -82,6 +84,7 @@ What changes is the behavior:
 > `fix-issue` when something is broken,
 > `documentation` for docs,
 > `knowledge` for a teachable topic guide,
+> `deep-dive` for a broad technology or product dossier,
 > `analyse` for read-only investigation,
 > `implementation` to build.
 
@@ -149,7 +152,7 @@ npx @hrica/miica-kit install-agent-skills
 You can also install only the commands you care about:
 
 ```bash
-npx @hrica/miica-kit install-codex-skills --skills miica-plan,miica-knowledge,miica-implementation
+npx @hrica/miica-kit install-codex-skills --skills miica-plan,miica-knowledge,miica-deep-dive,miica-implementation
 ```
 
 ## Real-World Usage Examples
@@ -198,7 +201,22 @@ Expected behavior:
 - includes sources, caveats, and practical guidance
 - see the canonical example in [`knowledge-base/npm-package-publishing-with-github-actions/`](./knowledge-base/npm-package-publishing-with-github-actions/README.md)
 
-### Example 4: You want a read-only review
+### Example 4: You want a broad deep dive on a product or technology
+
+Prompt:
+
+```text
+Use miica-deep-dive to create a deep dive on Zoho CRM, including product surface, latest changes, API and integrations, market positioning, and practical recommendations.
+```
+
+Expected behavior:
+- the agent researches authoritative current sources
+- inspects dynamic product pages with browser tooling when simple fetch is not enough
+- creates a dedicated `deep-dive/<topic-slug>/` folder
+- separates durable product understanding from dated market or release observations
+- delivers a structured dossier instead of a narrow explainer
+
+### Example 5: You want a read-only review
 
 Prompt:
 
@@ -211,7 +229,7 @@ Expected behavior:
 - reviews for bugs, regressions, missing handling, coverage gaps, or architectural concerns
 - does not silently continue into implementation unless you ask for that in the same message
 
-### Example 5: You want full implementation
+### Example 6: You want full implementation
 
 Prompt:
 
@@ -238,29 +256,29 @@ Package runners:
 
 ```bash
 npx @hrica/miica-kit install-kit --mode direct
-npx @hrica/miica-kit install-kit --mode modular --skills miica-plan,miica-knowledge,miica-implementation
+npx @hrica/miica-kit install-kit --mode modular --skills miica-plan,miica-knowledge,miica-deep-dive,miica-implementation
 ```
 
 ```bash
 pnpm dlx @hrica/miica-kit install-kit --mode direct
-pnpm dlx @hrica/miica-kit install-kit --mode modular --skills miica-plan,miica-knowledge,miica-implementation
+pnpm dlx @hrica/miica-kit install-kit --mode modular --skills miica-plan,miica-knowledge,miica-deep-dive,miica-implementation
 ```
 
 ```bash
 bunx @hrica/miica-kit install-kit --mode direct
-bunx @hrica/miica-kit install-kit --mode modular --skills miica-plan,miica-knowledge,miica-implementation
+bunx @hrica/miica-kit install-kit --mode modular --skills miica-plan,miica-knowledge,miica-deep-dive,miica-implementation
 ```
 
 Native scripts from a local clone:
 
 ```powershell
 ./scripts/install-kit.ps1 -TargetPath <path> -Mode direct
-./scripts/install-kit.ps1 -TargetPath <path> -Mode modular -Skills @('miica-plan','miica-knowledge','miica-implementation')
+./scripts/install-kit.ps1 -TargetPath <path> -Mode modular -Skills @('miica-plan','miica-knowledge','miica-deep-dive','miica-implementation')
 ```
 
 ```bash
 ./scripts/install-kit.sh <path> direct
-./scripts/install-kit.sh <path> modular miica-plan miica-knowledge miica-implementation
+./scripts/install-kit.sh <path> modular miica-plan miica-knowledge miica-deep-dive miica-implementation
 ```
 
 #### Direct vs modular
@@ -289,7 +307,7 @@ Use this when you want the `miica-*` commands available in `Codex`.
 
 ```bash
 npx @hrica/miica-kit install-codex-skills
-pnpm dlx @hrica/miica-kit install-codex-skills --skills miica-plan,miica-fix-issue,miica-documentation,miica-knowledge,miica-analyse,miica-implementation
+pnpm dlx @hrica/miica-kit install-codex-skills --skills miica-plan,miica-fix-issue,miica-documentation,miica-knowledge,miica-deep-dive,miica-analyse,miica-implementation
 bunx @hrica/miica-kit install-codex-skills
 ```
 
@@ -297,12 +315,12 @@ Native scripts:
 
 ```powershell
 ./scripts/install-codex-skills.ps1
-./scripts/install-codex-skills.ps1 -Skills @('miica-plan','miica-fix-issue','miica-documentation','miica-knowledge','miica-analyse','miica-implementation')
+./scripts/install-codex-skills.ps1 -Skills @('miica-plan','miica-fix-issue','miica-documentation','miica-knowledge','miica-deep-dive','miica-analyse','miica-implementation')
 ```
 
 ```bash
 ./scripts/install-codex-skills.sh
-./scripts/install-codex-skills.sh "" miica-plan miica-fix-issue miica-documentation miica-knowledge miica-analyse miica-implementation
+./scripts/install-codex-skills.sh "" miica-plan miica-fix-issue miica-documentation miica-knowledge miica-deep-dive miica-analyse miica-implementation
 ```
 
 Default install target:
@@ -315,7 +333,7 @@ Use this when you want the same command surface in `Claude`.
 
 ```bash
 npx @hrica/miica-kit install-claude-skills
-pnpm dlx @hrica/miica-kit install-claude-skills --skills miica-plan,miica-fix-issue,miica-documentation,miica-knowledge,miica-analyse,miica-implementation
+pnpm dlx @hrica/miica-kit install-claude-skills --skills miica-plan,miica-fix-issue,miica-documentation,miica-knowledge,miica-deep-dive,miica-analyse,miica-implementation
 bunx @hrica/miica-kit install-claude-skills
 ```
 
@@ -323,12 +341,12 @@ Native scripts:
 
 ```powershell
 ./scripts/install-claude-skills.ps1
-./scripts/install-claude-skills.ps1 -Skills @('miica-plan','miica-fix-issue','miica-documentation','miica-knowledge','miica-analyse','miica-implementation')
+./scripts/install-claude-skills.ps1 -Skills @('miica-plan','miica-fix-issue','miica-documentation','miica-knowledge','miica-deep-dive','miica-analyse','miica-implementation')
 ```
 
 ```bash
 ./scripts/install-claude-skills.sh
-./scripts/install-claude-skills.sh "" miica-plan miica-fix-issue miica-documentation miica-knowledge miica-analyse miica-implementation
+./scripts/install-claude-skills.sh "" miica-plan miica-fix-issue miica-documentation miica-knowledge miica-deep-dive miica-analyse miica-implementation
 ```
 
 Default install target:
@@ -341,7 +359,7 @@ Use this when you want the same commands in `.agents`-style environments.
 
 ```bash
 npx @hrica/miica-kit install-agent-skills
-pnpm dlx @hrica/miica-kit install-agent-skills --skills miica-plan,miica-fix-issue,miica-documentation,miica-knowledge,miica-analyse,miica-implementation
+pnpm dlx @hrica/miica-kit install-agent-skills --skills miica-plan,miica-fix-issue,miica-documentation,miica-knowledge,miica-deep-dive,miica-analyse,miica-implementation
 bunx @hrica/miica-kit install-agent-skills
 ```
 
@@ -349,12 +367,12 @@ Native scripts:
 
 ```powershell
 ./scripts/install-agent-skills.ps1
-./scripts/install-agent-skills.ps1 -Skills @('miica-plan','miica-fix-issue','miica-documentation','miica-knowledge','miica-analyse','miica-implementation')
+./scripts/install-agent-skills.ps1 -Skills @('miica-plan','miica-fix-issue','miica-documentation','miica-knowledge','miica-deep-dive','miica-analyse','miica-implementation')
 ```
 
 ```bash
 ./scripts/install-agent-skills.sh
-./scripts/install-agent-skills.sh "" miica-plan miica-fix-issue miica-documentation miica-knowledge miica-analyse miica-implementation
+./scripts/install-agent-skills.sh "" miica-plan miica-fix-issue miica-documentation miica-knowledge miica-deep-dive miica-analyse miica-implementation
 ```
 
 Default install target:
@@ -429,12 +447,23 @@ Important behavior:
 
 ### `miica-knowledge`
 
-Use it for knowledge bases, explainers, primers, and topic guides.
+Use it for knowledge bases, explainers, primers, and focused topic guides.
 
 Important behavior:
 - research and verify when the topic depends on current tools, policies, or platform behavior
 - structure the output for mixed audiences instead of writing one giant wall of text
 - separate facts, recommendations, and uncertainty
+- use `miica-deep-dive` instead when the request is really a broad technology or product dossier
+
+### `miica-deep-dive`
+
+Use it for broad, current deep dives on technologies, products, platforms, vendors, and ecosystems.
+
+Important behavior:
+- gather broad source coverage, not just one narrow explanation
+- use browser tooling when simple fetch is not enough because the page is dynamic or interaction-dependent
+- check for existing Playwright skill or MCP/browser tooling before introducing direct setup
+- separate durable understanding from dated release or market observations
 
 ### `miica-analyse`
 
@@ -468,15 +497,15 @@ The difference is that you do not have to think in fifteen micro-modes every day
 
 ## Repository Structure
 
-- [`AGENTS.md`](./AGENTS.md): always-on `miica-se` posture plus the six-command model
+- [`AGENTS.md`](./AGENTS.md): always-on `miica-se` posture plus the seven-command model
 - [`MEMORY.md`](./MEMORY.md): durable repo memory and installer invariants
 - [`CHANGELOG.md`](./CHANGELOG.md): notable kit changes
 - [`ROLES.md`](./ROLES.md): extracted internal roles from the original workflow
 - [`WORKFLOW.md`](./WORKFLOW.md): public workflow and command-routing rules
 - [`knowledge-base/npm-package-publishing-with-github-actions/`](./knowledge-base/npm-package-publishing-with-github-actions/README.md): canonical `miica-knowledge` example for npm package publishing with GitHub Actions
-- [`skills/`](./skills): six portable public commands
-- [`codex-skills/`](./codex-skills): six installable skill folders for Codex and `.agents`
-- [`claude-skills/`](./claude-skills): six installable skill folders for Claude
+- [`skills/`](./skills): seven portable public commands
+- [`codex-skills/`](./codex-skills): seven installable skill folders for Codex and `.agents`
+- [`claude-skills/`](./claude-skills): seven installable skill folders for Claude
 - [`templates/PROJECT_AGENT_INSTRUCTIONS.md`](./templates/PROJECT_AGENT_INSTRUCTIONS.md): base project instruction template
 - [`templates/PROJECT_MEMORY.md`](./templates/PROJECT_MEMORY.md): durable project memory template
 - [`templates/PROJECT_CHANGELOG.md`](./templates/PROJECT_CHANGELOG.md): project changelog template
