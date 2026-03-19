@@ -10,6 +10,7 @@ The public commands in this kit are:
 - `miica-plan`
 - `miica-fix-issue`
 - `miica-documentation`
+- `miica-knowledge`
 - `miica-analyse`
 - `miica-implementation`
 
@@ -72,7 +73,19 @@ This command may touch:
 - testing docs
 - contributor or workflow docs
 
-### 4. miica-analyse
+### 4. miica-knowledge
+
+Use when the user wants a knowledge base, explainer, primer, onboarding pack, or learning dossier on a topic.
+
+This command may combine:
+- current research
+- source gathering and verification
+- topic structuring
+- executive explanation for non-technical readers
+- practitioner guidance for technical readers
+- glossary, FAQ, and sources writing
+
+### 5. miica-analyse
 
 Use when the user wants investigation, review, diagnosis, assessment, or comparison without code changes.
 
@@ -87,7 +100,7 @@ This command may combine read-only:
 `miica-analyse` is a hard phase boundary.
 Do not modify files in this mode unless the same user message explicitly asks to continue.
 
-### 5. miica-implementation
+### 6. miica-implementation
 
 Use when the user wants software built or changed end-to-end and the task is primarily implementation rather than bug fixing or documentation.
 
@@ -106,6 +119,7 @@ If the user does not name a command, infer the best one:
 - fuzzy scope or architecture question: `miica-plan`
 - bug or regression: `miica-fix-issue`
 - docs work: `miica-documentation`
+- knowledge base, explainer, primer, onboarding pack, or learning dossier: `miica-knowledge`
 - investigation or review request: `miica-analyse`
 - feature or behavior change: `miica-implementation`
 
@@ -148,6 +162,7 @@ For current external information or browser-dependent behavior:
 - `miica-plan`: use all relevant planning lenses needed by the request, not just one by habit
 - `miica-fix-issue`: reproduce, investigate, verify, review, and regression-protect with the strongest available stack
 - `miica-documentation`: inspect real code, commands, and behavior before editing docs
+- `miica-knowledge`: gather authoritative sources, structure layered teaching material, and make the topic understandable for mixed audiences
 - `miica-analyse`: gather maximum relevant evidence, but remain read-only
 - `miica-implementation`: use the minimum planning needed, then implement, review, QA, verify, and sync docs when warranted
 

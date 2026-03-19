@@ -4,13 +4,14 @@ This is the public operating model for the kit.
 
 ## Public command surface
 
-The kit intentionally exposes only five commands:
+The kit intentionally exposes only six commands:
 
 1. `miica-plan`
 2. `miica-fix-issue`
 3. `miica-documentation`
-4. `miica-analyse`
-5. `miica-implementation`
+4. `miica-knowledge`
+5. `miica-analyse`
+6. `miica-implementation`
 
 `miica-se` is always on as the default stance behind every command.
 
@@ -20,6 +21,7 @@ The workflow still preserves the useful internal ideas:
 - scope challenge when the request is fuzzy or product-facing
 - engineering review when the change is risky or non-trivial
 - design planning when users will directly experience the result
+- research and source verification when the outcome is educational
 - debug before patch
 - review for production risk, not style theater
 - browser QA when behavior is user-facing
@@ -34,6 +36,7 @@ Use the smallest sufficient command:
 - planning or scoping question: `miica-plan`
 - backend-only or frontend bug: `miica-fix-issue`
 - docs-only change: `miica-documentation`
+- knowledge base, explainer, primer, or learning dossier: `miica-knowledge`
 - review or investigation request: `miica-analyse`
 - feature or behavior change: `miica-implementation`
 

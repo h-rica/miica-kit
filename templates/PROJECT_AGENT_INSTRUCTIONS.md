@@ -19,10 +19,11 @@ Apply a direct senior-engineering stance on every non-trivial task:
 
 ## Public command surface
 
-This kit intentionally exposes only five public commands:
+This kit intentionally exposes only six public commands:
 - `miica-plan`
 - `miica-fix-issue`
 - `miica-documentation`
+- `miica-knowledge`
 - `miica-analyse`
 - `miica-implementation`
 
@@ -31,6 +32,7 @@ This kit intentionally exposes only five public commands:
 - `miica-plan`: planning, scoping, sequencing, architecture direction, or a plain plan request
 - `miica-fix-issue`: bug, issue, regression, broken flow, or failing test
 - `miica-documentation`: docs creation, docs updates, README, MEMORY, CHANGELOG, architecture or testing docs
+- `miica-knowledge`: knowledge base, explainer, primer, onboarding pack, or learning dossier on a topic
 - `miica-analyse`: investigation, review, diagnosis, comparison, or read-only assessment
 - `miica-implementation`: feature work or non-trivial behavior changes end-to-end
 
@@ -49,6 +51,7 @@ The public commands may internally combine several lenses:
 - scope pressure-testing
 - engineering review
 - design planning
+- research and source verification
 - debug investigation
 - review
 - browser QA
@@ -103,6 +106,7 @@ Escalate effort until one of these is true:
 - `miica-plan`: use all relevant planning lenses needed by the request, not just one by habit
 - `miica-fix-issue`: reproduce, investigate, verify, review, and regression-protect with the strongest available stack
 - `miica-documentation`: inspect real code, commands, and behavior before editing docs
+- `miica-knowledge`: gather authoritative sources, structure layered teaching material, and make the topic understandable for mixed audiences
 - `miica-analyse`: gather maximum relevant evidence, but remain read-only
 - `miica-implementation`: use the minimum planning needed, then implement, review, QA, verify, and sync docs when warranted
 

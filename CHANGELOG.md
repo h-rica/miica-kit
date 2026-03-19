@@ -11,7 +11,8 @@ The format is based on Keep a Changelog, and this project aims to follow Semanti
 - Publishing instructions now document npm's current requirement for account 2FA or a granular token with `Bypass 2FA`, clarify that trusted publishing comes after the first successful manual publish, include the exact `npm trust github` setup and verification commands, add a minimal release runbook, keep license metadata aligned with the chosen MIT license, and now describe the `release-please` based release flow.
 
 ### Added
-- Five-command public skill surface: `miica-plan`, `miica-fix-issue`, `miica-documentation`, `miica-analyse`, and `miica-implementation`.
+- Six-command public skill surface: `miica-plan`, `miica-fix-issue`, `miica-documentation`, `miica-knowledge`, `miica-analyse`, and `miica-implementation`.
+- New `miica-knowledge` portable and installable skill surfaces for teachable, source-backed knowledge-base creation.
 - Project and global installers now support the simplified `miica-*` command model.
 - Symmetric uninstall commands for project-local installs, Codex skills, Claude skills, and `.agents` skills.
 - A `claude-skills/` surface mirroring the installable `miica-*` skill folders for Claude.
@@ -20,7 +21,7 @@ The format is based on Keep a Changelog, and this project aims to follow Semanti
 ### Changed
 - `miica-se` is now an always-on posture inside `AGENTS.md` and project templates instead of a separate public skill.
 - The old phase-by-phase internal skills are no longer the public install surface.
-- README, workflow docs, and project instructions now route work through the five-command model.
+- README, workflow docs, and project instructions now route work through the six-command model.
 - Public package and CLI naming now use `miica-kit`.
 - Every `miica-*` command now encodes a best-available effort rule so agents are expected to use the strongest relevant combination of tools, evidence, and verification available in their environment.
 - Project uninstall is now conservative with root docs: unchanged kit-managed files are removed or restored, changed files are left in place with manual follow-up guidance.
