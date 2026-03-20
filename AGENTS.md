@@ -46,6 +46,7 @@ The command should intelligently combine only the planning lenses that matter:
 - scope and user-value pressure test when the request is product-facing, fuzzy, or suspiciously narrow
 - engineering review when the change is non-trivial, risky, cross-layer, or architecturally unclear
 - design planning review when users will directly experience the result
+- reference-driven UI guide extraction when the user provides inspiration sites, screenshots, recordings, or Figma links
 
 `miica-plan` is a hard phase boundary.
 Stop after the plan unless the same user message explicitly asks to continue.
@@ -120,6 +121,7 @@ Use when the user wants software built or changed end-to-end and the task is pri
 This command may combine:
 - lightweight planning when needed
 - design planning when the work is user-facing
+- reference-driven UI guide extraction when user-facing work is defined mainly by references
 - implementation
 - self-review
 - browser QA
@@ -170,6 +172,7 @@ Escalate effort until one of these is true:
 For current external information or browser-dependent behavior:
 - search or fetch first when discovery is the main problem
 - use a real browser when the truth depends on JavaScript, auth, layout, history, console, network behavior, or user interaction
+- when UI work is described mainly through references, inspect those references before inventing missing details
 
 ## Command-level effort expectations
 

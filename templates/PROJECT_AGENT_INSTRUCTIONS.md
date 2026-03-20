@@ -53,6 +53,7 @@ The public commands may internally combine several lenses:
 - scope pressure-testing
 - engineering review
 - design planning
+- reference-driven UI guide extraction
 - research and source verification
 - debug investigation
 - review
@@ -97,6 +98,7 @@ Escalate effort until one of these is true:
 - Read `MEMORY.md` before non-trivial work when the file exists.
 - For user-facing work, use the native browser tooling of this agent stack whenever available.
 - For external/current information, use web search or fetch before deeper browser work.
+- When user-facing work is described mainly by website models, screenshots, recordings, or Figma links, inspect them and synthesize a guide before coding.
 - Do not guess about browser behavior when direct inspection is possible.
 - No blind fixes when debugging.
 - Reviews must prioritize bugs, regressions, edge cases, missing tests, and completeness gaps.

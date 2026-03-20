@@ -18,13 +18,13 @@ The kit intentionally exposes only seven commands:
 The original phase-by-phase breakdown is useful for maintenance, but too granular for daily work.
 
 This kit now hides that phase complexity behind seven commands:
-- `miica-plan` decides whether to apply scope review, engineering review, and design planning
+- `miica-plan` decides whether to apply scope review, engineering review, design planning, and reference-driven UI guide extraction
 - `miica-fix-issue` decides how much debug, review, QA, and ship work is needed
 - `miica-documentation` decides which durable docs need updates
 - `miica-knowledge` decides how much research, teaching structure, and audience layering are needed for a focused topic
 - `miica-deep-dive` decides how much broad research, current verification, browser inspection, and dossier structure are needed
 - `miica-analyse` decides which read-only analysis lenses to combine
-- `miica-implementation` decides how much planning, implementation, QA, and docs sync are needed
+- `miica-implementation` decides how much planning, reference-driven UI extraction, implementation, QA, and docs sync are needed
 
 ## Suggested usage in another project
 

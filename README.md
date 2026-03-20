@@ -35,6 +35,7 @@ Behind those seven commands, the kit still keeps the useful discipline:
 - debug before patching
 - review for real risk, not style theater
 - use browser evidence when UI behavior matters
+- turn inspiration sites, screenshots, recordings, and Figma references into implementation-grade UI guides when the request is design-heavy but under-specified
 - research and verify when the output teaches a topic
 - sync docs when shipped reality changed
 
@@ -70,13 +71,13 @@ What changes is the behavior:
 
 | Command | In plain English | Use it when... | What it may combine |
 |---|---|---|---|
-| `miica-plan` | Think before building | the task is fuzzy, risky, or needs sequencing | scope review, engineering review, design planning |
+| `miica-plan` | Think before building | the task is fuzzy, risky, or needs sequencing | scope review, engineering review, design planning, UI reference-guide extraction |
 | `miica-fix-issue` | Fix something broken | there is a bug, regression, failing flow, or broken test | debug, reproduction, implementation, review, QA |
 | `miica-documentation` | Make the docs match reality | docs are missing, stale, or inconsistent | README, MEMORY, CHANGELOG, workflow docs |
 | `miica-knowledge` | Build a teachable knowledge base | you want a primer, explainer, onboarding pack, or focused topic guide | research, source gathering, executive summary, practitioner guide, glossary, FAQ |
 | `miica-deep-dive` | Go deep on a technology or product | you want a broad, current view of a technology, product, platform, vendor, or ecosystem | research, current verification, browser inspection, API and integration analysis, comparison, executive summary |
 | `miica-analyse` | Investigate without changing code | you want diagnosis, review, comparison, or assessment | read-only review, architecture analysis, QA-only, browser evidence |
-| `miica-implementation` | Build something end to end | the task is primarily feature delivery | light planning, implementation, review, QA, docs sync |
+| `miica-implementation` | Build something end to end | the task is primarily feature delivery | light planning, UI reference-guide extraction, implementation, review, QA, docs sync |
 
 [!TIP]
 > If you forget which one to use:
@@ -118,7 +119,7 @@ It should use the strongest relevant combination of what is available in the cur
 - installed skills
 - verification and regression checks
 
-The rule is **not** “use every tool”.
+The rule is **not** "use every tool".
 The rule is: **use every relevant tool that materially reduces uncertainty or risk**.
 
 ## Quick Start
@@ -170,6 +171,20 @@ Expected behavior:
 - it challenges scope if necessary
 - it may combine product, engineering, and design planning
 - it stops after the plan unless you also asked it to continue
+
+### Example 1b: You have inspiration links instead of a clean design prompt
+
+Prompt:
+
+```text
+Use miica-plan for this request: use linear.app and the attached Figma board as inspiration for our dashboard, extract a UI guide first, then stop.
+```
+
+Expected behavior:
+- the agent inspects the references instead of relying on vague aesthetic prompting
+- it uses browser and Figma evidence when available
+- it writes a strict guide with clear observed facts, inferred details, and unknowns
+- it stops after the planning and guide artifact unless you also asked it to continue
 
 ### Example 2: Something is broken
 
@@ -425,6 +440,7 @@ Use it for planning, scoping, sequencing, architecture direction, or design dire
 
 Important behavior:
 - it is a hard phase boundary
+- if the design intent is being shown through websites, screenshots, recordings, or Figma links, it should extract a strict UI guide before recommending implementation
 - it should stop after the plan unless the same message explicitly asks to continue
 
 ### `miica-fix-issue`
@@ -479,6 +495,7 @@ Use it for end-to-end feature work.
 
 Important behavior:
 - it should do only the planning the task actually needs
+- if the UI direction is carried mainly by references, it should extract and follow a strict guide before coding
 - then implementation, review, QA, verification, and docs sync when warranted
 
 ## What Stayed From The Original Workflow
@@ -487,6 +504,7 @@ Internally, the workflow still preserves what actually matters:
 - scope challenge before medium or large work
 - engineering review before risky implementation
 - design planning for user-facing work
+- reference-driven UI guide extraction for website, screenshot, recording, or Figma-led design requests
 - research and source verification for educational outputs
 - debug before patch
 - review for production risk
@@ -506,6 +524,8 @@ The difference is that you do not have to think in fifteen micro-modes every day
 - [`skills/`](./skills): seven portable public commands
 - [`codex-skills/`](./codex-skills): seven installable skill folders for Codex and `.agents`
 - [`claude-skills/`](./claude-skills): seven installable skill folders for Claude
+- [`templates/UI_REFERENCE_GUIDE_TEMPLATE.md`](./templates/UI_REFERENCE_GUIDE_TEMPLATE.md): markdown template for reference-driven UI guide artifacts
+- [`templates/UI_REFERENCE_GUIDE_SCHEMA.json`](./templates/UI_REFERENCE_GUIDE_SCHEMA.json): strict machine-readable schema for `guide.json` outputs
 - [`templates/PROJECT_AGENT_INSTRUCTIONS.md`](./templates/PROJECT_AGENT_INSTRUCTIONS.md): base project instruction template
 - [`templates/PROJECT_MEMORY.md`](./templates/PROJECT_MEMORY.md): durable project memory template
 - [`templates/PROJECT_CHANGELOG.md`](./templates/PROJECT_CHANGELOG.md): project changelog template

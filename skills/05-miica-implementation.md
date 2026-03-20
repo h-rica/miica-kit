@@ -24,6 +24,7 @@ Apply the minimum sufficient sequence:
 
 - lightweight planning first when scope or architecture is still unclear
 - design planning when the change is user-facing
+- UI reference-guide extraction before coding when the design intent is carried mainly by websites, screenshots, recordings, or Figma links
 - implementation
 - self-review focused on behavioral risk
 - browser QA when the change is user-facing
@@ -33,6 +34,7 @@ Apply the minimum sufficient sequence:
 ## Outputs
 
 - implemented change
+- design source-of-truth artifact when reference-driven UI extraction was needed
 - verification summary
 - docs-sync note
 - remaining risk
@@ -41,4 +43,5 @@ Apply the minimum sufficient sequence:
 
 - do not skip clarification on medium or large tasks
 - do not over-plan small local changes
+- do not invent unobserved reference details when direct inspection is possible
 - if the task is actually a bugfix with unclear cause, switch to miica-fix-issue logic

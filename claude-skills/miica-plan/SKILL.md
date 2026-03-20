@@ -32,8 +32,10 @@ Push planning effort until one of these is true:
    - Use it for non-trivial changes, risky refactors, cross-layer work, data-flow changes, or unclear failure modes.
 4. Decide whether design planning is needed.
    - Use it when users will directly see or feel the result.
-5. Skip planning theater for small local changes.
-6. Make a recommendation and defend it.
+5. Decide whether reference-driven UI extraction is needed.
+   - Use it when the user provides inspiration sites, screenshots, recordings, or Figma links and the design intent would otherwise stay ambiguous.
+6. Skip planning theater for small local changes.
+7. Make a recommendation and defend it.
 
 ## Expected output
 
@@ -41,6 +43,7 @@ Push planning effort until one of these is true:
 - chosen scope
 - architecture and data-flow notes when relevant
 - design notes when relevant
+- UI reference guide or extraction brief when relevant
 - step sequence
 - risks
 - success criteria
