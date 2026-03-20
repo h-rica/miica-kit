@@ -57,6 +57,7 @@ Increase decision quality, surface hidden tradeoffs, and keep execution aligned 
 ## Recommended combinations
 
 - fuzzy feature: `phase-office-hours` -> `phase-plan-ceo-review` -> `miica-se`
+- reference-led UI build: `phase-browse` -> `phase-ui-reference-guide` -> `miica-se` -> implementation
 - non-trivial build: `phase-plan-eng-review` -> `miica-se` -> implementation
 - hard bug: `phase-debug` -> `miica-se` -> implementation -> `phase-review`
 - pre-merge scrutiny: `miica-se` -> `phase-review` -> `phase-ship`
