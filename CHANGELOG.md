@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog, and this project aims to follow Semantic Versioning once versioned releases begin.
 
+## [0.4.0](https://github.com/h-rica/miica-kit/compare/v0.3.0...v0.4.0) (2026-03-20)
+
+
+### Features
+
+* **internal:** add ui reference guide phase ([6914a56](https://github.com/h-rica/miica-kit/commit/6914a56a5beaf30eeecc59f475d1202b6041def6))
+
 ## [0.3.0](https://github.com/h-rica/miica-kit/compare/v0.2.3...v0.3.0) (2026-03-19)
 
 
