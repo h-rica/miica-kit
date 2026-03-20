@@ -9,6 +9,7 @@ Planning and scope-routing command for software work.
 - the user asks for a plan
 - scope, architecture, or sequencing is not settled yet
 - the task may need product, engineering, and design planning combined
+- the user provides inspiration sites, screenshots, recordings, or Figma links and needs a UI guide before implementation
 
 ## Goal
 
@@ -26,6 +27,7 @@ Apply only the planning phases that the request needs:
 - scope and user-value pressure test when the request is product-facing or suspiciously narrow
 - engineering review when the change is non-trivial or risky
 - design planning review when users will directly experience the result
+- UI reference-guide extraction when the desired interface is being shown through references instead of specified clearly in prose
 - skip unnecessary planning theater for small, local work
 
 ## Outputs
@@ -34,6 +36,7 @@ Apply only the planning phases that the request needs:
 - chosen scope
 - architecture and data-flow notes when relevant
 - design notes when relevant
+- UI reference guide or extraction brief when relevant
 - step sequence
 - risks
 - success criteria

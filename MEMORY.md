@@ -7,6 +7,7 @@ Durable memory for `miica-kit`.
 - This repo is a portability layer for an existing phase-based operating model, not a runtime clone of any vendor-specific behavior.
 - Keep the public command surface small enough for daily work.
 - Preserve the richer internal phase model even when the public commands are fewer.
+- Reference-driven UI extraction belongs behind `miica-plan` and `miica-implementation`, not as a separate public command.
 - `miica-se` is an always-on posture, not a separate public command.
 - Every `miica-*` invocation should use best-available effort: the strongest relevant combination of tools and evidence in the current environment.
 - Search first and browse second remains the default policy for web work.

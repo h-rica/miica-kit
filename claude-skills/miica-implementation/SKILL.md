@@ -26,6 +26,7 @@ Do not overuse tools performatively, but do not stop at shallow implementation w
    - scope pressure-test when needed
    - engineering review when needed
    - design planning when the change is user-facing
+   - UI reference-guide extraction when the desired interface is being shown through websites, screenshots, recordings, or Figma links
 3. Implement the change.
 4. Review the changed path for behavioral risk.
 5. Run browser QA when the change is user-facing.
@@ -36,5 +37,6 @@ Do not overuse tools performatively, but do not stop at shallow implementation w
 
 - do not over-plan small local changes
 - do not skip planning on risky changes
+- do not invent unobserved reference details when direct inspection is possible
 - if the task is actually an unclear bugfix, switch to miica-fix-issue logic
 - state remaining risk honestly at the end
