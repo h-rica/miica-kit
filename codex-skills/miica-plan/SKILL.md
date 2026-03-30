@@ -1,6 +1,6 @@
 ---
 name: miica-plan
-description: Use when the user wants a plan, scoping help, technical sequencing, or says plan. Intelligently combines scope review, engineering review, and design planning only when needed, then stops after a recommendation unless the same message explicitly asks to continue.
+description: Use when the user wants a plan, scoping help, technical sequencing, or a buildable implementation-plan artifact from settled requirements and architecture. Intelligently combines scope review, engineering review, design planning, and implementation-plan creation only when needed, then stops after the plan unless the same message explicitly asks to continue.
 ---
 
 # miica-plan
@@ -11,7 +11,7 @@ Use this command to plan before coding.
 
 ## Goal
 
-Produce the smallest defensible plan and decide which planning lenses matter for this task.
+Produce the smallest defensible plan and decide which planning lenses matter for this task, including when the right output is a buildable implementation-plan artifact.
 
 ## Best-available effort
 
@@ -34,8 +34,13 @@ Push planning effort until one of these is true:
    - Use it when users will directly see or feel the result.
 5. Decide whether reference-driven UI extraction is needed.
    - Use it when the user provides inspiration sites, screenshots, recordings, or Figma links and the design intent would otherwise stay ambiguous.
-6. Skip planning theater for small local changes.
-7. Make a recommendation and defend it.
+6. Decide whether implementation-plan creation is needed.
+   - Use it when the user has settled requirements and architecture and wants an execution-ready plan artifact rather than only a high-level recommendation.
+   - Verify only the current standards that materially affect the implementation choices.
+   - Phase by working software, map the files that will change, and write atomic TDD-driven tasks with self-contained context and no placeholders.
+   - Save the implementation plan under `docs/plans/YYYY-MM-DD-<feature-name>.md` when the request is document-producing.
+7. Skip planning theater for small local changes.
+8. Make a recommendation and defend it.
 
 ## Expected output
 
@@ -43,6 +48,7 @@ Push planning effort until one of these is true:
 - chosen scope
 - architecture and data-flow notes when relevant
 - design notes when relevant
+- implementation plan artifact and path when relevant
 - UI reference guide or extraction brief when relevant
 - step sequence
 - risks
@@ -51,4 +57,4 @@ Push planning effort until one of these is true:
 
 ## Exit condition
 
-Stop after the plan unless the same user message explicitly asks for plan plus execution.
+Stop after the plan or plan artifact unless the same user message explicitly asks for plan plus execution.

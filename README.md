@@ -15,22 +15,26 @@ This README uses `pnpm dlx` for pnpm examples because that is the documented pnp
 
 [!NOTE]
 > You do **not** need to be highly technical to use this kit.
-> In the simplest form, you install it and then ask your agent to use one of seven commands:
-> `miica-plan`, `miica-fix-issue`, `miica-documentation`, `miica-knowledge`, `miica-deep-dive`, `miica-analyse`, or `miica-implementation`.
+> In the simplest form, you install it and then ask your agent to use one of eleven commands:
+> `miica-plan`, `miica-architecture`, `miica-fix-issue`, `miica-documentation`, `miica-knowledge`, `miica-deep-dive`, `miica-analyse`, `miica-review`, `miica-implementation`, `miica-git`, or `miica-execute-plan`.
 
 ## What It Does
 
-Instead of exposing a long list of micro-modes, the kit reduces daily work to seven commands:
+Instead of exposing a long list of micro-modes, the kit reduces daily work to eleven commands:
 
 - `miica-plan`
+- `miica-architecture`
 - `miica-fix-issue`
 - `miica-documentation`
 - `miica-knowledge`
 - `miica-deep-dive`
 - `miica-analyse`
+- `miica-review`
 - `miica-implementation`
+- `miica-git`
+- `miica-execute-plan`
 
-Behind those seven commands, the kit still keeps the useful discipline:
+Behind those eleven commands, the kit still keeps the useful discipline:
 - challenge bad scope before coding
 - debug before patching
 - review for real risk, not style theater
@@ -38,6 +42,8 @@ Behind those seven commands, the kit still keeps the useful discipline:
 - turn inspiration sites, screenshots, recordings, and Figma references into implementation-grade UI guides when the request is design-heavy but under-specified
 - research and verify when the output teaches a topic
 - sync docs when shipped reality changed
+- inspect git state before branching, committing, or drafting PR content
+- execute tracked plan steps without letting plan files drift from implementation reality
 
 The goal is simple:
 - **less prompt micromanagement**
@@ -67,27 +73,35 @@ What changes is the behavior:
 - it combines review, QA, browser checks, docs sync, research, and verification more intelligently
 - it stops when a command is supposed to stay read-only or plan-only
 
-## The Seven Commands
+## The Eleven Commands
 
 | Command | In plain English | Use it when... | What it may combine |
 |---|---|---|---|
-| `miica-plan` | Think before building | the task is fuzzy, risky, or needs sequencing | scope review, engineering review, design planning, UI reference-guide extraction |
+| `miica-plan` | Think before building | the task is fuzzy, risky, needs sequencing, or needs an implementation-plan artifact from settled inputs | scope review, engineering review, design planning, implementation-plan creation, UI reference-guide extraction |
+| `miica-architecture` | Turn requirements into a buildable design | requirements are settled and you need a technical architecture | requirements review, architecture design, data flow, repository structure, testing strategy |
 | `miica-fix-issue` | Fix something broken | there is a bug, regression, failing flow, or broken test | debug, reproduction, implementation, review, QA |
 | `miica-documentation` | Make the docs match reality | docs are missing, stale, or inconsistent | README, MEMORY, CHANGELOG, workflow docs |
 | `miica-knowledge` | Build a teachable knowledge base | you want a primer, explainer, onboarding pack, or focused topic guide | research, source gathering, executive summary, practitioner guide, glossary, FAQ |
 | `miica-deep-dive` | Go deep on a technology or product | you want a broad, current view of a technology, product, platform, vendor, or ecosystem | research, current verification, browser inspection, API and integration analysis, comparison, executive summary |
-| `miica-analyse` | Investigate without changing code | you want diagnosis, review, comparison, or assessment | read-only review, architecture analysis, QA-only, browser evidence |
+| `miica-analyse` | Investigate without changing code | you want diagnosis, comparison, or assessment | read-only analysis, architecture analysis, QA-only, browser evidence |
+| `miica-review` | Review recent changes | you want a diff, commit, or focused code review | diff inspection, targeted context reading, project-specific review rules, findings-only reporting |
 | `miica-implementation` | Build something end to end | the task is primarily feature delivery | light planning, UI reference-guide extraction, implementation, review, QA, docs sync |
+| `miica-git` | Handle the git step | you want a branch, commit, or PR draft | git status and diff inspection, branch naming, selective staging by coherent small slices, conventional commit writing, PR drafting |
+| `miica-execute-plan` | Work through a tracked plan | you want to do the next or in-progress step from an existing plan file set | plan-file state management, targeted implementation, in-progress step updates, completed-step archival |
 
 [!TIP]
 > If you forget which one to use:
 > `plan` before deciding,
+> `architecture` to turn settled requirements into system design,
 > `fix-issue` when something is broken,
 > `documentation` for docs,
 > `knowledge` for a teachable topic guide,
 > `deep-dive` for a broad technology or product dossier,
 > `analyse` for read-only investigation,
-> `implementation` to build.
+> `review` for findings-only code review,
+> `implementation` to build,
+> `git` for branch, commit, or PR workflow,
+> `execute-plan` to work through an existing tracked plan.
 
 ## What Makes It Different
 
@@ -101,9 +115,13 @@ It is the default posture behind every request.
 That means the agent should:
 - be direct and recommendation-driven
 - distinguish facts, hypotheses, risks, and recommendations
+- inspect local code, docs, and repository evidence before asking questions that can be answered directly
+- verify current external standards only when the recommendation depends on moving targets such as active libraries, APIs, products, or policies
 - challenge bad scope before writing code
+- surface hidden assumptions, unresolved dependencies, edge cases, and fallback paths when they materially affect the outcome
+- ask only the highest-leverage clarification questions and pace them instead of dumping a long checklist
 - avoid shallow implementation theater
-- state residual risk honestly
+- close risky work with a short summary of resolved assumptions, open questions, and residual risk
 
 ### 2. Best-available effort is the default
 
@@ -153,7 +171,7 @@ npx @hrica/miica-kit install-agent-skills
 You can also install only the commands you care about:
 
 ```bash
-npx @hrica/miica-kit install-codex-skills --skills miica-plan,miica-knowledge,miica-deep-dive,miica-implementation
+npx @hrica/miica-kit install-codex-skills --skills miica-plan,miica-execute-plan,miica-git,miica-implementation
 ```
 
 ## Real-World Usage Examples
@@ -185,6 +203,34 @@ Expected behavior:
 - it uses browser and Figma evidence when available
 - it writes a strict guide with clear observed facts, inferred details, and unknowns
 - it stops after the planning and guide artifact unless you also asked it to continue
+
+### Example 1c: You want an architecture doc from settled requirements
+
+Prompt:
+
+```text
+Use miica-architecture with REQUIREMENTS.md ARCHITECTURE.md for the billing revamp.
+```
+
+Expected behavior:
+- the agent reads the requirements first
+- it surfaces open questions when they would materially change the design
+- it writes `ARCHITECTURE.md` with components, data flow, structure, testing strategy, assumptions, and open questions
+- it stops after the architecture unless you also asked it to continue
+
+### Example 1d: You want an implementation-plan artifact from settled inputs
+
+Prompt:
+
+```text
+Use miica-plan with REQUIREMENTS.md and ARCHITECTURE.md to generate a buildable implementation plan for the billing revamp.
+```
+
+Expected behavior:
+- the agent reads the settled inputs first
+- it verifies only the current standards that materially affect the plan
+- it writes a phased implementation plan artifact under `docs/plans/`
+- it stops after the plan artifact unless you also asked it to continue
 
 ### Example 2: Something is broken
 
@@ -244,6 +290,20 @@ Expected behavior:
 - reviews for bugs, regressions, missing handling, coverage gaps, or architectural concerns
 - does not silently continue into implementation unless you ask for that in the same message
 
+### Example 5b: You want a findings-only code review
+
+Prompt:
+
+```text
+Use miica-review on the current diff with a security focus.
+```
+
+Expected behavior:
+- the agent stays read-only
+- it reviews the changed code and the nearby context needed to judge it
+- it reports findings grouped as must fix, should fix, and observations
+- it says so explicitly if the review is clean
+
 ### Example 6: You want full implementation
 
 Prompt:
@@ -259,6 +319,34 @@ Expected behavior:
 - runs QA / validation proportionate to the change
 - updates docs if durable behavior changed
 
+### Example 7: You want a git workflow step handled directly
+
+Prompt:
+
+```text
+Use miica-git to draft pull request content for this branch against main.
+```
+
+Expected behavior:
+- the agent inspects the current git status and branch diff first
+- it infers that the request is a PR draft, not a branch or commit action
+- it returns a title, summary, testing notes, and risk or open-question section
+- if you instead ask for a branch or commit, it routes to that path automatically
+
+### Example 8: You want to execute the next step from an existing tracked plan
+
+Prompt:
+
+```text
+Use miica-execute-plan to do the next step from the current plan files.
+```
+
+Expected behavior:
+- the agent reads the existing `plan-backlog.md`, `plan-in-progress.md`, and `plan-completed.md` files first
+- it moves the top backlog step to in-progress only while implementing it in the same response
+- it keeps plan state truthful as work moves from in-progress to completed
+- if the next step is blocked, it explains why and does not mutate the plan files speculatively
+
 ## Installation Modes
 
 You can use the kit in three ways.
@@ -271,29 +359,29 @@ Package runners:
 
 ```bash
 npx @hrica/miica-kit install-kit --mode direct
-npx @hrica/miica-kit install-kit --mode modular --skills miica-plan,miica-knowledge,miica-deep-dive,miica-implementation
+npx @hrica/miica-kit install-kit --mode modular --skills miica-plan,miica-execute-plan,miica-git,miica-implementation
 ```
 
 ```bash
 pnpm dlx @hrica/miica-kit install-kit --mode direct
-pnpm dlx @hrica/miica-kit install-kit --mode modular --skills miica-plan,miica-knowledge,miica-deep-dive,miica-implementation
+pnpm dlx @hrica/miica-kit install-kit --mode modular --skills miica-plan,miica-execute-plan,miica-git,miica-implementation
 ```
 
 ```bash
 bunx @hrica/miica-kit install-kit --mode direct
-bunx @hrica/miica-kit install-kit --mode modular --skills miica-plan,miica-knowledge,miica-deep-dive,miica-implementation
+bunx @hrica/miica-kit install-kit --mode modular --skills miica-plan,miica-execute-plan,miica-git,miica-implementation
 ```
 
 Native scripts from a local clone:
 
 ```powershell
 ./scripts/install-kit.ps1 -TargetPath <path> -Mode direct
-./scripts/install-kit.ps1 -TargetPath <path> -Mode modular -Skills @('miica-plan','miica-knowledge','miica-deep-dive','miica-implementation')
+./scripts/install-kit.ps1 -TargetPath <path> -Mode modular -Skills @('miica-plan','miica-execute-plan','miica-git','miica-implementation')
 ```
 
 ```bash
 ./scripts/install-kit.sh <path> direct
-./scripts/install-kit.sh <path> modular miica-plan miica-knowledge miica-deep-dive miica-implementation
+./scripts/install-kit.sh <path> modular miica-plan miica-execute-plan miica-git miica-implementation
 ```
 
 #### Direct vs modular
@@ -322,7 +410,7 @@ Use this when you want the `miica-*` commands available in `Codex`.
 
 ```bash
 npx @hrica/miica-kit install-codex-skills
-pnpm dlx @hrica/miica-kit install-codex-skills --skills miica-plan,miica-fix-issue,miica-documentation,miica-knowledge,miica-deep-dive,miica-analyse,miica-implementation
+pnpm dlx @hrica/miica-kit install-codex-skills --skills miica-plan,miica-architecture,miica-fix-issue,miica-documentation,miica-knowledge,miica-deep-dive,miica-analyse,miica-review,miica-implementation,miica-git,miica-execute-plan
 bunx @hrica/miica-kit install-codex-skills
 ```
 
@@ -330,12 +418,12 @@ Native scripts:
 
 ```powershell
 ./scripts/install-codex-skills.ps1
-./scripts/install-codex-skills.ps1 -Skills @('miica-plan','miica-fix-issue','miica-documentation','miica-knowledge','miica-deep-dive','miica-analyse','miica-implementation')
+./scripts/install-codex-skills.ps1 -Skills @('miica-plan','miica-architecture','miica-fix-issue','miica-documentation','miica-knowledge','miica-deep-dive','miica-analyse','miica-review','miica-implementation','miica-git','miica-execute-plan')
 ```
 
 ```bash
 ./scripts/install-codex-skills.sh
-./scripts/install-codex-skills.sh "" miica-plan miica-fix-issue miica-documentation miica-knowledge miica-deep-dive miica-analyse miica-implementation
+./scripts/install-codex-skills.sh "" miica-plan miica-architecture miica-fix-issue miica-documentation miica-knowledge miica-deep-dive miica-analyse miica-review miica-implementation miica-git miica-execute-plan
 ```
 
 Default install target:
@@ -348,7 +436,7 @@ Use this when you want the same command surface in `Claude`.
 
 ```bash
 npx @hrica/miica-kit install-claude-skills
-pnpm dlx @hrica/miica-kit install-claude-skills --skills miica-plan,miica-fix-issue,miica-documentation,miica-knowledge,miica-deep-dive,miica-analyse,miica-implementation
+pnpm dlx @hrica/miica-kit install-claude-skills --skills miica-plan,miica-architecture,miica-fix-issue,miica-documentation,miica-knowledge,miica-deep-dive,miica-analyse,miica-review,miica-implementation,miica-git,miica-execute-plan
 bunx @hrica/miica-kit install-claude-skills
 ```
 
@@ -356,12 +444,12 @@ Native scripts:
 
 ```powershell
 ./scripts/install-claude-skills.ps1
-./scripts/install-claude-skills.ps1 -Skills @('miica-plan','miica-fix-issue','miica-documentation','miica-knowledge','miica-deep-dive','miica-analyse','miica-implementation')
+./scripts/install-claude-skills.ps1 -Skills @('miica-plan','miica-architecture','miica-fix-issue','miica-documentation','miica-knowledge','miica-deep-dive','miica-analyse','miica-review','miica-implementation','miica-git','miica-execute-plan')
 ```
 
 ```bash
 ./scripts/install-claude-skills.sh
-./scripts/install-claude-skills.sh "" miica-plan miica-fix-issue miica-documentation miica-knowledge miica-deep-dive miica-analyse miica-implementation
+./scripts/install-claude-skills.sh "" miica-plan miica-architecture miica-fix-issue miica-documentation miica-knowledge miica-deep-dive miica-analyse miica-review miica-implementation miica-git miica-execute-plan
 ```
 
 Default install target:
@@ -374,7 +462,7 @@ Use this when you want the same commands in `.agents`-style environments.
 
 ```bash
 npx @hrica/miica-kit install-agent-skills
-pnpm dlx @hrica/miica-kit install-agent-skills --skills miica-plan,miica-fix-issue,miica-documentation,miica-knowledge,miica-deep-dive,miica-analyse,miica-implementation
+pnpm dlx @hrica/miica-kit install-agent-skills --skills miica-plan,miica-architecture,miica-fix-issue,miica-documentation,miica-knowledge,miica-deep-dive,miica-analyse,miica-review,miica-implementation,miica-git,miica-execute-plan
 bunx @hrica/miica-kit install-agent-skills
 ```
 
@@ -382,12 +470,12 @@ Native scripts:
 
 ```powershell
 ./scripts/install-agent-skills.ps1
-./scripts/install-agent-skills.ps1 -Skills @('miica-plan','miica-fix-issue','miica-documentation','miica-knowledge','miica-deep-dive','miica-analyse','miica-implementation')
+./scripts/install-agent-skills.ps1 -Skills @('miica-plan','miica-architecture','miica-fix-issue','miica-documentation','miica-knowledge','miica-deep-dive','miica-analyse','miica-review','miica-implementation','miica-git','miica-execute-plan')
 ```
 
 ```bash
 ./scripts/install-agent-skills.sh
-./scripts/install-agent-skills.sh "" miica-plan miica-fix-issue miica-documentation miica-knowledge miica-deep-dive miica-analyse miica-implementation
+./scripts/install-agent-skills.sh "" miica-plan miica-architecture miica-fix-issue miica-documentation miica-knowledge miica-deep-dive miica-analyse miica-review miica-implementation miica-git miica-execute-plan
 ```
 
 Default install target:
@@ -425,9 +513,9 @@ Project uninstall removes **only kit-managed elements** and is conservative with
 ### Global skill uninstall
 
 ```bash
-npx @hrica/miica-kit uninstall-codex-skills --skills miica-plan,miica-fix-issue
-npx @hrica/miica-kit uninstall-claude-skills --skills miica-plan,miica-fix-issue
-npx @hrica/miica-kit uninstall-agent-skills --skills miica-plan,miica-fix-issue
+npx @hrica/miica-kit uninstall-codex-skills --skills miica-plan,miica-execute-plan
+npx @hrica/miica-kit uninstall-claude-skills --skills miica-plan,miica-execute-plan
+npx @hrica/miica-kit uninstall-agent-skills --skills miica-plan,miica-execute-plan
 ```
 
 You can omit `--skills` to remove the whole `miica-*` surface from that target environment.
@@ -436,12 +524,23 @@ You can omit `--skills` to remove the whole `miica-*` surface from that target e
 
 ### `miica-plan`
 
-Use it for planning, scoping, sequencing, architecture direction, or design direction.
+Use it for planning, scoping, sequencing, design direction before coding, or a buildable implementation-plan artifact from settled requirements and architecture.
 
 Important behavior:
 - it is a hard phase boundary
+- if the user has settled requirements and architecture and wants a buildable implementation plan, it should generate a phased artifact under `docs/plans/`
 - if the design intent is being shown through websites, screenshots, recordings, or Figma links, it should extract a strict UI guide before recommending implementation
-- it should stop after the plan unless the same message explicitly asks to continue
+- it should stop after the plan or plan artifact unless the same message explicitly asks to continue
+
+### `miica-architecture`
+
+Use it when a technical architecture is the deliverable.
+
+Important behavior:
+- read settled requirements first
+- surface open questions if they materially affect the design
+- produce a buildable architecture with components, data flow, repository structure, testing strategy, assumptions, and open questions
+- stop after the architecture unless the same message explicitly asks to continue
 
 ### `miica-fix-issue`
 
@@ -483,11 +582,21 @@ Important behavior:
 
 ### `miica-analyse`
 
-Use it for read-only investigation, review, diagnosis, or comparison.
+Use it for read-only investigation, diagnosis, or comparison.
 
 Important behavior:
 - it is read-only by default
 - it should not silently drift into implementation unless the same message asks it to continue
+
+### `miica-review`
+
+Use it for code review of the current diff, a recent commit, or a focused area.
+
+Important behavior:
+- it is findings-only and read-only by default
+- it should review changed code and only the nearby context needed to judge it
+- it should prioritize real bugs, security issues, fragility, and robustness problems over style
+- it should say so explicitly when the review is clean
 
 ### `miica-implementation`
 
@@ -497,6 +606,26 @@ Important behavior:
 - it should do only the planning the task actually needs
 - if the UI direction is carried mainly by references, it should extract and follow a strict guide before coding
 - then implementation, review, QA, verification, and docs sync when warranted
+
+### `miica-git`
+
+Use it for focused git workflow steps: branch creation, commit creation, or pull request drafting.
+
+Important behavior:
+- it should inspect the current git state before acting
+- it should infer whether the user needs a branch, commit, or PR draft and route automatically
+- it should prefer precise staging, split multi-part diffs into coherent small commit slices, and write a conventional commit message for each slice
+- it should draft PR content from the real branch diff and only open an actual PR if the user explicitly asks and tooling allows it
+
+### `miica-execute-plan`
+
+Use it for working through an existing tracked plan file set step by step.
+
+Important behavior:
+- it should read the current `plan-backlog.md`, `plan-in-progress.md`, and `plan-completed.md` files before acting
+- it should only move backlog to in-progress while implementing that step in the same response
+- it should keep the in-progress step as a truthful mirror of in-progress work
+- it should not mutate the plan files speculatively when the next step is blocked
 
 ## What Stayed From The Original Workflow
 
@@ -515,15 +644,15 @@ The difference is that you do not have to think in fifteen micro-modes every day
 
 ## Repository Structure
 
-- [`AGENTS.md`](./AGENTS.md): always-on `miica-se` posture plus the seven-command model
+- [`AGENTS.md`](./AGENTS.md): always-on `miica-se` posture plus the eleven-command model
 - [`MEMORY.md`](./MEMORY.md): durable repo memory and installer invariants
 - [`CHANGELOG.md`](./CHANGELOG.md): notable kit changes
 - [`ROLES.md`](./ROLES.md): extracted internal roles from the original workflow
 - [`WORKFLOW.md`](./WORKFLOW.md): public workflow and command-routing rules
 - [`knowledge-base/npm-package-publishing-with-github-actions/`](./knowledge-base/npm-package-publishing-with-github-actions/README.md): canonical `miica-knowledge` example for npm package publishing with GitHub Actions
-- [`skills/`](./skills): seven portable public commands
-- [`codex-skills/`](./codex-skills): seven installable skill folders for Codex and `.agents`
-- [`claude-skills/`](./claude-skills): seven installable skill folders for Claude
+- [`skills/`](./skills): eleven portable public commands
+- [`codex-skills/`](./codex-skills): eleven installable skill folders for Codex and `.agents`
+- [`claude-skills/`](./claude-skills): eleven installable skill folders for Claude
 - [`templates/UI_REFERENCE_GUIDE_TEMPLATE.md`](./templates/UI_REFERENCE_GUIDE_TEMPLATE.md): markdown template for reference-driven UI guide artifacts
 - [`templates/UI_REFERENCE_GUIDE_SCHEMA.json`](./templates/UI_REFERENCE_GUIDE_SCHEMA.json): strict machine-readable schema for `guide.json` outputs
 - [`templates/PROJECT_AGENT_INSTRUCTIONS.md`](./templates/PROJECT_AGENT_INSTRUCTIONS.md): base project instruction template

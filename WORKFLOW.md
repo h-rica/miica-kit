@@ -4,15 +4,19 @@ This is the public operating model for the kit.
 
 ## Public command surface
 
-The kit intentionally exposes only seven commands:
+The kit intentionally exposes only eleven commands:
 
 1. `miica-plan`
-2. `miica-fix-issue`
-3. `miica-documentation`
-4. `miica-knowledge`
-5. `miica-deep-dive`
-6. `miica-analyse`
-7. `miica-implementation`
+2. `miica-architecture`
+3. `miica-fix-issue`
+4. `miica-documentation`
+5. `miica-knowledge`
+6. `miica-deep-dive`
+7. `miica-analyse`
+8. `miica-review`
+9. `miica-implementation`
+10. `miica-git`
+11. `miica-execute-plan`
 
 `miica-se` is always on as the default stance behind every command.
 
@@ -22,12 +26,14 @@ The workflow still preserves the useful internal ideas:
 - scope challenge when the request is fuzzy or product-facing
 - engineering review when the change is risky or non-trivial
 - design planning when users will directly experience the result
+- implementation-plan creation when the user wants a buildable plan artifact from settled inputs
 - reference-driven UI guide extraction when the user provides inspiration sites, screenshots, recordings, or Figma links
 - research and source verification when the outcome is educational or dossier-driven
 - debug before patch
 - review for production risk, not style theater
 - browser QA when behavior is user-facing
 - documentation sync when shipped reality changed
+- git state inspection before branching, committing, or drafting PR content, with commit slices grouped into coherent small units
 
 The public commands decide which of these lenses to combine. Do not force every phase on every task.
 
@@ -35,18 +41,24 @@ The public commands decide which of these lenses to combine. Do not force every 
 
 Use the smallest sufficient command:
 
-- planning or scoping question: `miica-plan`
+- planning, scoping, or implementation-plan request from settled inputs: `miica-plan`
+- architecture document or system design request: `miica-architecture`
 - backend-only or frontend bug: `miica-fix-issue`
 - docs-only change: `miica-documentation`
 - knowledge base, explainer, primer, or focused learning dossier: `miica-knowledge`
 - broad, current deep dive on a technology, product, platform, vendor, or ecosystem: `miica-deep-dive`
-- review or investigation request: `miica-analyse`
+- investigation, diagnosis, or comparison request: `miica-analyse`
+- code review or diff review request: `miica-review`
 - feature or behavior change: `miica-implementation`
+- git branch creation, commit creation, or pull request draft request: `miica-git`
+- existing tracked plan or `do next step` / `continue active step` request: `miica-execute-plan`
 
 ## Hard boundaries
 
-- `miica-plan` stops after the plan unless the same user message explicitly asks to continue.
+- `miica-plan` stops after the plan or plan artifact unless the same user message explicitly asks to continue.
+- `miica-architecture` stops after the architecture unless the same user message explicitly asks to continue.
 - `miica-analyse` is read-only unless the same user message explicitly asks to continue.
+- `miica-review` is findings-only and read-only unless the same user message explicitly asks to continue.
 
 ## Essential invariants
 

@@ -40,7 +40,7 @@ Recommended merge block for the project's AGENTS.md:
 ## Portable Agent Kit
 
 Use ./.agent-kit/WORKFLOW.md for supplemental workflow guidance.
-Use ./.agent-kit/skills/ when a task maps cleanly to one of the public commands, especially miica-plan, miica-knowledge, miica-deep-dive, miica-analyse, miica-fix-issue, and miica-implementation.
+Use ./.agent-kit/skills/ when a task maps cleanly to one of the public commands, such as miica-plan, miica-architecture, miica-fix-issue, miica-documentation, miica-knowledge, miica-deep-dive, miica-analyse, miica-review, miica-implementation, miica-git, and miica-execute-plan.
 Use ./MEMORY.md for durable project memory when the repository keeps one.
 Keep ./CHANGELOG.md current for notable shipped changes.
 If there is any conflict, the project-specific AGENTS.md rules win over the generic portable kit.
@@ -347,7 +347,7 @@ $SkillFiles = if ($Skills.Count -gt 0) {
             (($_.BaseName -replace '^[0-9]+-', '').ToLowerInvariant()) -eq $Wanted
         }
         if (-not $Match) {
-            throw "No skill file matched '$Skill'. Use the exact portable skill name, for example: miica-plan, miica-fix-issue, miica-documentation, miica-knowledge, miica-deep-dive, miica-analyse, or miica-implementation."
+            throw "No skill file matched '$Skill'. Use the exact portable skill name, for example: miica-plan, miica-architecture, miica-fix-issue, miica-documentation, miica-knowledge, miica-deep-dive, miica-analyse, miica-review, miica-implementation, miica-git, or miica-execute-plan."
         }
         $Match
     }
