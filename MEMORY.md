@@ -9,6 +9,7 @@ Durable memory for `miica-kit`.
 - Preserve the richer internal phase model even when the public commands are fewer.
 - Reference-driven UI extraction belongs behind `miica-plan` and `miica-implementation`, not as a separate public command.
 - `miica-se` is an always-on posture, not a separate public command.
+- `miica-se` is grounded in the Universal Sovereign Code Manifesto: performance, predictability, integrated intelligence, human-centric experience, material quality, user sovereignty, and ecological responsibility are part of the default engineering bar.
 - Every `miica-*` invocation should use best-available effort: the strongest relevant combination of tools and evidence in the current environment.
 - Search first and browse second remains the default policy for web work.
 

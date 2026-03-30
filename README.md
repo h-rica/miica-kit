@@ -123,6 +123,16 @@ That means the agent should:
 - avoid shallow implementation theater
 - close risky work with a short summary of resolved assumptions, open questions, and residual risk
 
+`miica-se` is also grounded in the [Universal Sovereign Code Manifesto](./UNIVERSAL_SOVEREIGN_CODE_MANIFESTO.md).
+Its seven pillars define the posture behind the posture:
+- Ground: performance is product quality.
+- Logic: predictable, reproducible systems beat manual setup.
+- Insight: AI should remove mundane work without taking away control.
+- Soul: tools should protect creative flow.
+- Form: invisible implementation quality matters as much as the visible surface.
+- Sovereignty: users own their data, provenance, and AI boundaries.
+- Responsibility: efficiency and low waste are engineering requirements.
+
 ### 2. Best-available effort is the default
 
 When you invoke a `miica-*` command, the agent should not stop at the first plausible answer.
