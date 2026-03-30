@@ -50,7 +50,11 @@ The format is based on Keep a Changelog, and this project aims to follow Semanti
 - The release and fallback publish workflows now use `actions/checkout@v5` so the publish path no longer relies on the deprecated Node 20 checkout action.
 
 ### Added
-- Seven-command public skill surface: `miica-plan`, `miica-fix-issue`, `miica-documentation`, `miica-knowledge`, `miica-deep-dive`, `miica-analyse`, and `miica-implementation`.
+- Eleven-command public skill surface: `miica-plan`, `miica-architecture`, `miica-fix-issue`, `miica-documentation`, `miica-knowledge`, `miica-deep-dive`, `miica-analyse`, `miica-review`, `miica-implementation`, `miica-git`, and `miica-execute-plan`.
+- New `miica-architecture` portable and installable skill surfaces for turning settled requirements into buildable architecture documents.
+- New `miica-review` portable and installable skill surfaces for findings-only code review of diffs, commits, and focused areas.
+- New `miica-git` portable and installable skill surfaces for branch creation, commit creation, and pull request drafting from real git state.
+- New `miica-execute-plan` portable and installable skill surfaces for step-by-step execution of tracked development plans.
 - New `miica-knowledge` portable and installable skill surfaces for teachable, source-backed knowledge-base creation.
 - New `miica-deep-dive` portable and installable skill surfaces for broad, current, dossier-style research on technologies, products, platforms, vendors, and ecosystems.
 - New internal `phase-ui-reference-guide` maintenance skill plus shipped UI guide template and JSON schema for reference-driven design extraction from websites, screenshots, recordings, and Figma links.
@@ -62,8 +66,15 @@ The format is based on Keep a Changelog, and this project aims to follow Semanti
 
 ### Changed
 - `miica-se` is now an always-on posture inside `AGENTS.md` and project templates instead of a separate public skill.
+- The always-on `miica-se` posture now explicitly requires local-first evidence gathering, selective current-standard verification, assumption and dependency surfacing, paced clarification, and short closure summaries for risky work.
 - The old phase-by-phase internal skills are no longer the public install surface.
-- README, workflow docs, and project instructions now route work through the seven-command model.
+- README, workflow docs, and project instructions now route work through the eleven-command model.
+- Architecture design and code review now have dedicated public commands instead of being folded into `miica-plan` and `miica-analyse`.
+- Git workflow tasks now have a dedicated `miica-git` command that auto-routes among branch, commit, and PR drafting work.
+- Tracked plan execution now uses `plan-backlog.md`, `plan-in-progress.md`, and `plan-completed.md` across the shipped docs and skill surfaces.
+- Commit-generation guidance now expects coherent small commit slices instead of one broad commit when the diff spans multiple units of work.
+- The release-please workflow now appends a short changelog brief to release PR bodies by summarizing the `CHANGELOG.md` section generated in the PR diff.
+- `miica-plan` now supports implementation-plan creation from settled requirements and architecture, while `miica-execute-plan` owns tracked-plan execution.
 - `miica-plan` and `miica-implementation` now treat reference-driven UI work as a first-class internal capability, requiring strict guide extraction before implementation when the user supplies inspiration links instead of clear prose specs.
 - Public package and CLI naming now use `miica-kit`.
 - Every `miica-*` command now encodes a best-available effort rule so agents are expected to use the strongest relevant combination of tools, evidence, and verification available in their environment.
