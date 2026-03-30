@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog, and this project aims to follow Semantic Versioning once versioned releases begin.
 
+## [0.5.0](https://github.com/h-rica/miica-kit/compare/v0.4.0...v0.5.0) (2026-03-30)
+
+
+### Features
+
+* expand public command surface ([e9bcdf4](https://github.com/h-rica/miica-kit/commit/e9bcdf4e5650e3c57a45526d71540bb47b98597c))
+* expand public command surface ([de6b090](https://github.com/h-rica/miica-kit/commit/de6b09074282c852bf8d0bca8968c01eb39b1526))
+
+
+### Bug Fixes
+
+* enrich release pr descriptions ([d9ab396](https://github.com/h-rica/miica-kit/commit/d9ab3962a33ba2fdc942e94dfc32c3411bc3a6b4))
+
 ## [0.4.0](https://github.com/h-rica/miica-kit/compare/v0.3.0...v0.4.0) (2026-03-20)
 
 
