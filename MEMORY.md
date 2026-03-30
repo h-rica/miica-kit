@@ -26,6 +26,7 @@ Durable memory for `miica-kit`.
 - Portable public command names live in `skills/` and use the `miica-*` prefix.
 - Installable global skills live in `codex-skills/` and `claude-skills/` and use the same `miica-*` names.
 - Public command count should stay small unless there is a strong reason to expand it.
+- Tracked plan execution files use `plan-backlog.md`, `plan-in-progress.md`, and `plan-completed.md`.
 - `miica-knowledge` is the reserved public command for pedagogical, audience-layered topic guides; do not fold that workflow back into repo documentation.
 - `miica-deep-dive` is the reserved public command for broad, current, dossier-style research on technologies, products, platforms, vendors, and ecosystems.
 

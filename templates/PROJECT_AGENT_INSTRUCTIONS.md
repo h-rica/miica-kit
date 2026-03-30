@@ -12,40 +12,57 @@ Use `CHANGELOG.md` for notable shipped changes that should remain visible over t
 ## Always-on stance
 
 Apply a direct senior-engineering stance on every non-trivial task:
+- be direct and recommendation-driven
 - separate facts, hypotheses, risks, and recommendations
+- inspect local code, docs, and repository evidence before asking questions that can be answered directly
+- verify current external standards only when the recommendation depends on moving targets such as active libraries, APIs, products, or policies
 - challenge bad scope before coding
+- surface hidden assumptions, unresolved dependencies, edge cases, and fallback paths when they materially affect the outcome
+- ask only the highest-leverage clarification questions and pace them instead of dumping a long checklist
 - make a recommendation when multiple options exist
-- state residual risk honestly
+- close risky work with a short summary of resolved assumptions, open questions, and residual risk
 
 ## Public command surface
 
-This kit intentionally exposes only seven public commands:
+This kit intentionally exposes only eleven public commands:
 - `miica-plan`
+- `miica-architecture`
 - `miica-fix-issue`
 - `miica-documentation`
 - `miica-knowledge`
 - `miica-deep-dive`
 - `miica-analyse`
+- `miica-review`
 - `miica-implementation`
+- `miica-git`
+- `miica-execute-plan`
 
 ### Command routing
 
-- `miica-plan`: planning, scoping, sequencing, architecture direction, or a plain plan request
+- `miica-plan`: planning, scoping, sequencing, or an implementation-plan artifact from settled requirements and architecture
+- `miica-architecture`: technical architecture, system design, or an architecture document from settled requirements
 - `miica-fix-issue`: bug, issue, regression, broken flow, or failing test
 - `miica-documentation`: docs creation, docs updates, README, MEMORY, CHANGELOG, architecture or testing docs
 - `miica-knowledge`: knowledge base, explainer, primer, onboarding pack, or focused learning dossier on a topic
 - `miica-deep-dive`: broad, current deep dive on a technology, product, platform, vendor, or ecosystem
-- `miica-analyse`: investigation, review, diagnosis, comparison, or read-only assessment
+- `miica-analyse`: investigation, diagnosis, comparison, or read-only assessment
+- `miica-review`: code review, diff review, or commit review with findings-only output
 - `miica-implementation`: feature work or non-trivial behavior changes end-to-end
+- `miica-git`: branch creation, coherent small-slice commit creation, PR content drafting, or focused git workflow work
+- `miica-execute-plan`: step-by-step execution of an existing tracked development plan
 
 ## Hard boundaries
 
 Treat these as hard boundaries unless the same user message explicitly asks to continue:
 - `miica-plan`
+- `miica-architecture`
 - `miica-analyse`
+- `miica-review`
 
-`miica-plan` stops after the plan.
+`miica-plan` stops after the plan or plan artifact.
+`miica-architecture` stops after the architecture.
 `miica-analyse` does not edit files.
+`miica-review` stays findings-only and does not edit files.
 
 ## Internal routing model
 
@@ -53,6 +70,7 @@ The public commands may internally combine several lenses:
 - scope pressure-testing
 - engineering review
 - design planning
+- implementation-plan creation
 - reference-driven UI guide extraction
 - research and source verification
 - debug investigation
@@ -60,6 +78,7 @@ The public commands may internally combine several lenses:
 - browser QA
 - ship validation
 - docs sync
+- git workflow actions
 
 Choose only the lenses the task actually needs.
 Do not force every phase on every task.
@@ -90,7 +109,7 @@ Escalate effort until one of these is true:
 - the requested outcome is delivered
 - the remaining uncertainty cannot be reduced with available tools
 - additional tool use would not materially change the conclusion
-- the active command has a hard boundary, such as `miica-plan` or `miica-analyse`
+- the active command has a hard boundary, such as `miica-plan`, `miica-architecture`, `miica-analyse`, or `miica-review`
 
 ## Core rules
 
@@ -108,12 +127,16 @@ Escalate effort until one of these is true:
 ## Command expectations
 
 - `miica-plan`: use all relevant planning lenses needed by the request, not just one by habit
+- `miica-architecture`: turn settled requirements into a buildable architecture, surface material open questions, and stop after the design unless asked to continue
 - `miica-fix-issue`: reproduce, investigate, verify, review, and regression-protect with the strongest available stack
 - `miica-documentation`: inspect real code, commands, and behavior before editing docs
 - `miica-knowledge`: gather authoritative sources, structure layered teaching material, and make the topic understandable for mixed audiences
 - `miica-deep-dive`: gather authoritative sources, verify current facts, inspect dynamic pages with browser tooling when needed, and synthesize a broad dossier
 - `miica-analyse`: gather maximum relevant evidence, but remain read-only
+- `miica-review`: inspect the changed path or diff, focus on real ship risk, and remain findings-only and read-only
+- `miica-execute-plan`: keep tracked plan files truthful while implementing the next or in-progress step, and do not mutate plan state speculatively
 - `miica-implementation`: use the minimum planning needed, then implement, review, QA, verify, and sync docs when warranted
+- `miica-git`: inspect the real git state first, infer whether the user needs a branch, commit, or PR draft, split commit work into coherent small slices when needed, and keep git operations scoped and non-destructive unless explicitly asked otherwise
 
 ## Output defaults
 

@@ -38,7 +38,7 @@ else
   for wanted in "${SKILLS[@]}"; do
     match="$SOURCE_ROOT/$wanted"
     if [ ! -d "$match" ]; then
-      echo "No Claude skill matched '$wanted'. Use exact names like miica-plan, miica-fix-issue, miica-documentation, miica-knowledge, miica-deep-dive, miica-analyse, or miica-implementation." >&2
+      echo "No Claude skill matched '$wanted'. Use exact names like miica-plan, miica-architecture, miica-fix-issue, miica-documentation, miica-knowledge, miica-deep-dive, miica-analyse, miica-review, miica-implementation, miica-git, or miica-execute-plan." >&2
       exit 1
     fi
     selected+=("$match")

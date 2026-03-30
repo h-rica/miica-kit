@@ -80,6 +80,119 @@ jobs:
           manifest-file: .release-please-manifest.json
           release-as: ${{ steps.docs_release.outputs.release_as }}
 
+      - name: Add changelog brief to release PR
+        uses: actions/github-script@v7
+        env:
+          RELEASE_PRS_JSON: ${{ steps.release_docs.outputs.prs || steps.release_default.outputs.prs || '' }}
+        with:
+          script: |
+            const markerStart = '<!-- release-please-changelog-brief:start -->';
+            const markerEnd = '<!-- release-please-changelog-brief:end -->';
+
+            function extractChangelogBrief(patch) {
+              const addedLines = patch
+                .split('\n')
+                .filter((line) => line.startsWith('+') && !line.startsWith('+++'))
+                .map((line) => line.slice(1));
+
+              const releaseStart = addedLines.findIndex(
+                (line) => /^## \[/.test(line) && !/\[Unreleased\]/i.test(line)
+              );
+
+              if (releaseStart === -1) {
+                return '';
+              }
+
+              const section = [addedLines[releaseStart]];
+              let bulletsForHeading = 0;
+              let hasHeading = false;
+
+              for (let i = releaseStart + 1; i < addedLines.length; i += 1) {
+                const line = addedLines[i];
+
+                if (/^## \[/.test(line)) {
+                  break;
+                }
+
+                if (/^### /.test(line)) {
+                  section.push('', line);
+                  bulletsForHeading = 0;
+                  hasHeading = true;
+                  continue;
+                }
+
+                if (/^- /.test(line)) {
+                  if (!hasHeading || bulletsForHeading < 3) {
+                    section.push(line);
+                    bulletsForHeading += 1;
+                  }
+                }
+              }
+
+              return section.join('\n').trim();
+            }
+
+            function upsertBrief(body, brief) {
+              const block = `${markerStart}\n## Changelog Brief\n\n${brief}\n${markerEnd}`;
+              if (!body) {
+                return block;
+              }
+
+              const pattern = new RegExp(`${markerStart}[\\s\\S]*?${markerEnd}`);
+              if (pattern.test(body)) {
+                return body.replace(pattern, block);
+              }
+
+              return `${body.trim()}\n\n${block}`;
+            }
+
+            const rawPrs = process.env.RELEASE_PRS_JSON;
+            if (!rawPrs) {
+              core.info('No release PR payload available.');
+              return;
+            }
+
+            const parsedPrs = JSON.parse(rawPrs);
+            const prs = Array.isArray(parsedPrs) ? parsedPrs : [parsedPrs].filter(Boolean);
+            if (prs.length === 0) {
+              core.info('No release PRs to update.');
+              return;
+            }
+
+            for (const pr of prs) {
+              const files = await github.paginate(github.rest.pulls.listFiles, {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pr.number,
+                per_page: 100,
+              });
+
+              const changelogFile = files.find((file) => file.filename === 'CHANGELOG.md');
+              if (!changelogFile?.patch) {
+                core.info(`PR #${pr.number} does not include a parsable CHANGELOG.md patch.`);
+                continue;
+              }
+
+              const brief = extractChangelogBrief(changelogFile.patch);
+              if (!brief) {
+                core.info(`PR #${pr.number} has no release section to summarize yet.`);
+                continue;
+              }
+
+              const nextBody = upsertBrief(pr.body ?? '', brief);
+              if (nextBody === (pr.body ?? '')) {
+                core.info(`PR #${pr.number} already has the current changelog brief.`);
+                continue;
+              }
+
+              await github.rest.pulls.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pr.number,
+                body: nextBody,
+              });
+            }
+
       # Tags created by release-please use GITHUB_TOKEN, so publish in the same run.
       - name: Check out release tag
         if: ${{ steps.release_default.outputs.release_created == 'true' || steps.release_docs.outputs.release_created == 'true' }}

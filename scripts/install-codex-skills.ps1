@@ -43,7 +43,7 @@ $Selected = if ($Skills.Count -gt 0) {
         $Wanted = $Skill.ToLowerInvariant()
         $Match = $Available | Where-Object { $_.Name.ToLowerInvariant() -eq $Wanted }
         if (-not $Match) {
-            throw "No Codex skill matched '$Skill'. Use exact names like miica-plan, miica-fix-issue, miica-documentation, miica-knowledge, miica-deep-dive, miica-analyse, or miica-implementation."
+            throw "No Codex skill matched '$Skill'. Use exact names like miica-plan, miica-architecture, miica-fix-issue, miica-documentation, miica-knowledge, miica-deep-dive, miica-analyse, miica-review, miica-implementation, miica-git, or miica-execute-plan."
         }
         $Match
     }
