@@ -12,6 +12,7 @@ Durable memory for `miica-kit`.
 - `miica-se` is grounded in the Universal Sovereign Code Manifesto: performance, predictability, integrated intelligence, human-centric experience, material quality, user sovereignty, and ecological responsibility are part of the default engineering bar.
 - Every `miica-*` invocation should use best-available effort: the strongest relevant combination of tools and evidence in the current environment.
 - Search first and browse second remains the default policy for web work.
+- `release-please` in this repo depends on the commit that lands on `main` being parseable as a Conventional Commit; default GitHub merge-commit subjects can suppress release PR creation even when branch commits are conventional.
 
 ## Installation defaults
 

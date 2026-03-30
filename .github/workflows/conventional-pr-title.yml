@@ -1,0 +1,46 @@
+name: Conventional PR Title
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+      - ready_for_review
+
+permissions:
+  contents: read
+
+jobs:
+  validate-title:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate pull request title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          pattern='^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([[:alnum:]_.:/-]+\))?(!)?: .+'
+          if [[ "$PR_TITLE" =~ $pattern ]]; then
+            echo "PR title is a valid Conventional Commit: $PR_TITLE"
+            exit 0
+          fi
+
+          {
+            echo "Pull request titles must follow Conventional Commits."
+            echo "Received: $PR_TITLE"
+            echo
+            echo "Examples:"
+            echo "  feat: add knowledge command"
+            echo "  fix(workflow): guard release-please merge strategy"
+            echo "  docs(publishing): document squash-merge release rule"
+            echo
+            echo "Why this matters in this repo:"
+            echo "- Release Please can skip release creation when the commit that lands on main is not a Conventional Commit."
+            echo "- Use a Conventional Commit PR title and squash-merge the PR, or edit the merge commit title to the same format before merging."
+          } >&2
+
+          exit 1
