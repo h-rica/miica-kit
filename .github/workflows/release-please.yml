@@ -145,6 +145,63 @@ jobs:
             esac
           } >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Fail on hidden releasable merge commits
+        if: ${{ steps.release_outcome.outputs.release_kind == 'none' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          last_tag="$(git describe --tags --abbrev=0 2>/dev/null || true)"
+          if [ -n "$last_tag" ]; then
+            range="${last_tag}..HEAD"
+          else
+            range="HEAD"
+          fi
+
+          head_subject="$(git log -1 --format=%s)"
+          case "$head_subject" in
+            "Merge pull request #"*)
+              ;;
+            *)
+              exit 0
+              ;;
+          esac
+
+          has_nested_release_candidate=false
+          index=0
+          while IFS= read -r subject; do
+            [ -z "$subject" ] && continue
+
+            if [ "$index" -eq 0 ]; then
+              index=$((index + 1))
+              continue
+            fi
+
+            case "$subject" in
+              docs:*|docs\(*\):*|docs!:*|docs\(*\)!:*|feat:*|feat\(*\):*|feat!:*|feat\(*\)!:*|fix:*|fix\(*\):*|fix!:*|fix\(*\)!:*|deps:*|deps\(*\):*|deps!:*|deps\(*\)!:*)
+                has_nested_release_candidate=true
+                break
+                ;;
+            esac
+
+            index=$((index + 1))
+          done <<< "$(git log --format=%s $range)"
+
+          if [ "$has_nested_release_candidate" != true ]; then
+            exit 0
+          fi
+
+          {
+            echo "### Release Please Guardrail"
+            echo "- The push landed on \`main\` as a default merge commit: \`${head_subject}\`."
+            echo "- Release Please created no release PR or tag, but earlier commits since ${last_tag:-the repo start} contain releasable Conventional Commit subjects."
+            echo "- This usually means the PR was merged with GitHub's default merge-commit title instead of a Conventional Commit title."
+            echo "- Fix the merge strategy: squash-merge releasable PRs with a Conventional Commit title, or edit the merge commit title before merging."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          echo "::error::Release Please found releasable commits behind an unparseable merge commit title. Use squash merge or edit the merge commit title to a Conventional Commit."
+          exit 1
+
       - name: Add changelog brief to release PR
         uses: actions/github-script@v7
         env:
