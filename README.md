@@ -690,6 +690,7 @@ The difference is that you do not have to think in fifteen micro-modes every day
 ## Maintainer Note
 
 If you want to publish this package so it can be used with `npx`, `bunx`, or `pnpm dlx` from anywhere, see [PUBLISHING.md](./PUBLISHING.md).
+For release-worthy pull requests, squash-merge with a Conventional Commit title or edit the merge commit title before merging. Default `Merge pull request #...` subjects can cause `release-please` to skip release creation.
 
 ## License
 

@@ -68,6 +68,7 @@ The format is based on Keep a Changelog, and this project aims to follow Semanti
 - The docs-only release override in `.github/workflows/release-please.yml` no longer uses bash regex parsing that fails under GitHub Actions.
 - The release and fallback publish workflows now use `actions/setup-node@v6` so npm publish runs match the current action major version documented by the project.
 - The release and fallback publish workflows now use `actions/checkout@v5` so the publish path no longer relies on the deprecated Node 20 checkout action.
+- Release maintenance now fails fast when `release-please` skips a releasable merge because `main` received a default GitHub merge-commit subject instead of a Conventional Commit.
 
 ### Added
 - Eleven-command public skill surface: `miica-plan`, `miica-architecture`, `miica-fix-issue`, `miica-documentation`, `miica-knowledge`, `miica-deep-dive`, `miica-analyse`, `miica-review`, `miica-implementation`, `miica-git`, and `miica-execute-plan`.
@@ -83,6 +84,7 @@ The format is based on Keep a Changelog, and this project aims to follow Semanti
 - Symmetric uninstall commands for project-local installs, Codex skills, Claude skills, and `.agents` skills.
 - A `claude-skills/` surface mirroring the installable `miica-*` skill folders for Claude.
 - Project-local installs now write `.agent-kit/install-state.env` plus install snapshots so uninstall can safely remove kit-owned files or restore pre-kit backups.
+- A `Conventional PR Title` workflow now blocks non-Conventional-Commit pull request titles before they can land on `main` with release-breaking merge metadata.
 
 ### Changed
 - `miica-se` is now an always-on posture inside `AGENTS.md` and project templates instead of a separate public skill.

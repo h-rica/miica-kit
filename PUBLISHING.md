@@ -22,13 +22,15 @@ So there is no separate Bun registry or pnpm registry publish step for this pack
 For normal releases, once `release-please` and trusted publishing are configured, use this flow:
 
 1. Merge conventional commits into `main`.
-2. Wait for the `Release Please` workflow to open or update the release PR.
-3. Review and merge that release PR when you want to ship.
-4. Verify the `Release Please` workflow succeeded and the new version is visible on `https://www.npmjs.com/package/@hrica/miica-kit`.
-5. Smoke test from a folder outside this repo with `npx @hrica/miica-kit help`.
+2. Make sure the commit that lands on `main` is still a Conventional Commit: prefer squash merge with a Conventional Commit PR title, or edit the merge commit title before merging.
+3. Wait for the `Release Please` workflow to open or update the release PR.
+4. Review and merge that release PR when you want to ship.
+5. Verify the `Release Please` workflow succeeded and the new version is visible on `https://www.npmjs.com/package/@hrica/miica-kit`.
+6. Smoke test from a folder outside this repo with `npx @hrica/miica-kit help`.
 
 Important:
 - `release-please` derives the next version from Conventional Commits, so `feat:` drives a minor bump, `fix:` drives a patch bump, and `!` drives a breaking bump.
+- For feature PRs, the merge strategy matters too: a default GitHub merge-commit subject like `Merge pull request #123 ...` is not a Conventional Commit, so it can suppress release PR creation even when the branch commits were conventional.
 - In this repo, `docs:` commits also trigger a patch release when they are the only releasable change type since the last tag.
 - Chore-only changes do not usually open a release PR by themselves.
 - `release-please` needs the repository-level GitHub Actions setting `Allow GitHub Actions to create and approve pull requests` enabled, or it will fail with `GitHub Actions is not permitted to create or approve pull requests`.
@@ -252,10 +254,11 @@ Before expecting it to open release PRs, confirm these GitHub prerequisites:
 That workflow:
 1. runs on pushes to `main`
 2. creates or updates the release PR from Conventional Commits
-3. treats `docs:` commits as patch-release triggers when no `feat`, `fix`, or `deps` commits are present since the last tag
-4. creates the GitHub release and tag when the release PR is merged
-5. checks out the created tag in the same workflow run
-6. smoke-tests the CLI, previews the tarball, and publishes to npm with trusted publishing
+3. assumes the commit that lands on `main` is parseable as a Conventional Commit, so maintainers should squash-merge release-worthy PRs or edit merge-commit titles before merging
+4. treats `docs:` commits as patch-release triggers when no `feat`, `fix`, or `deps` commits are present since the last tag
+5. creates the GitHub release and tag when the release PR is merged
+6. checks out the created tag in the same workflow run
+7. smoke-tests the CLI, previews the tarball, and publishes to npm with trusted publishing
 
 Publishing in the same workflow run matters because tags created by `release-please` via `GITHUB_TOKEN` do not trigger a second workflow run reliably enough for publication.
 
@@ -319,8 +322,9 @@ If all three work, the publish is good.
 For normal releases after this setup:
 
 1. keep merging Conventional Commits into `main`
-2. review and merge the release PR opened by `release-please`
-3. verify the GitHub release, npm package page, and one runner smoke test (`npx`, `bunx`, or `pnpm dlx`)
+2. squash-merge release-worthy PRs with a Conventional Commit title, or edit the merge commit title before merging
+3. review and merge the release PR opened by `release-please`
+4. verify the GitHub release, npm package page, and one runner smoke test (`npx`, `bunx`, or `pnpm dlx`)
 
 Manual fallback example:
 
@@ -346,13 +350,14 @@ Use this checklist each time:
 
 1. Make sure the package name is correct in `package.json`.
 2. Make sure release-worthy commits use Conventional Commits so `release-please` can infer the next version correctly.
-3. Make sure the CLI still works with `node ./bin/miica-kit.mjs help`.
-4. Run `npm pack --dry-run` when packaging behavior changed materially.
-5. Make sure the license metadata stays aligned: the repo should keep a top-level `LICENSE` file plus a matching `package.json` `license` field.
-6. If this is the first release in a fresh repo, publish manually with `npm publish --access public` after enabling 2FA or preparing a granular token with `Bypass 2FA`.
-7. For ongoing releases here, merge the release PR opened by `.github/workflows/release-please.yml`.
-8. Use `.github/workflows/publish.yml` only as a fallback path for a manual tag push or manual dispatch.
-9. Verify `npx`, `bunx`, and `pnpm dlx` from outside the repo.
+3. Make sure the merge result on `main` is also a Conventional Commit by squash-merging the PR or editing the merge commit title before merge.
+4. Make sure the CLI still works with `node ./bin/miica-kit.mjs help`.
+5. Run `npm pack --dry-run` when packaging behavior changed materially.
+6. Make sure the license metadata stays aligned: the repo should keep a top-level `LICENSE` file plus a matching `package.json` `license` field.
+7. If this is the first release in a fresh repo, publish manually with `npm publish --access public` after enabling 2FA or preparing a granular token with `Bypass 2FA`.
+8. For ongoing releases here, merge the release PR opened by `.github/workflows/release-please.yml`.
+9. Use `.github/workflows/publish.yml` only as a fallback path for a manual tag push or manual dispatch.
+10. Verify `npx`, `bunx`, and `pnpm dlx` from outside the repo.
 
 ## Official References
 
