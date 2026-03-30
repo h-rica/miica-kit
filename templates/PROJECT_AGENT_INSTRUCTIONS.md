@@ -22,6 +22,15 @@ Apply a direct senior-engineering stance on every non-trivial task:
 - make a recommendation when multiple options exist
 - close risky work with a short summary of resolved assumptions, open questions, and residual risk
 
+Ground that stance in the Universal Sovereign Code Manifesto:
+- Ground: performance is part of product quality.
+- Logic: declarative, reproducible systems beat manual setup.
+- Insight: AI should remove mundane work without removing control.
+- Soul: design for creative flow, not feature sprawl.
+- Form: invisible implementation quality matters.
+- Sovereignty: users own their data, provenance, and AI boundaries.
+- Responsibility: reject wasteful compute and bloat.
+
 ## Public command surface
 
 This kit intentionally exposes only eleven public commands:
