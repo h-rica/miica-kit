@@ -164,7 +164,7 @@ If you prefer token-based publishing, use a granular access token scoped for thi
 
 Long term, the better setup is **trusted publishing** from CI.
 
-This repo now includes a GitHub Actions workflow at [`.github/workflows/publish.yml`](./.github/workflows/publish.yml).
+The normal automated publish path is [`.github/workflows/release-please.yml`](./.github/workflows/release-please.yml).
 
 ## Publish The Package
 
@@ -192,18 +192,18 @@ then the npm login session is valid, but the publishing credentials are still in
 
 This step comes after the first successful manual publish. npm trusted publisher configuration requires the package to already exist on the registry.
 
-Before running the trust command, make sure [`.github/workflows/publish.yml`](./.github/workflows/publish.yml) is committed and pushed to GitHub.
+Before running the trust command, make sure [`.github/workflows/release-please.yml`](./.github/workflows/release-please.yml) is committed and pushed to GitHub.
 
 If your local npm is older than `11.10.0`, use `npx` to run a current npm temporarily:
 
 ```bash
-npx npm@11.11.1 trust github @hrica/miica-kit --repo h-rica/miica-kit --file publish.yml -y
+npx npm@11.11.1 trust github @hrica/miica-kit --repo h-rica/miica-kit --file release-please.yml -y
 ```
 
 If your local npm is already recent enough, the equivalent command is:
 
 ```bash
-npm trust github @hrica/miica-kit --repo h-rica/miica-kit --file publish.yml -y
+npm trust github @hrica/miica-kit --repo h-rica/miica-kit --file release-please.yml -y
 ```
 
 During that command, npm will require a browser-based 2FA confirmation for the trust operation. Open the URL that npm prints, complete the confirmation on npmjs.com, then verify the relationship:
@@ -216,19 +216,20 @@ Expected configuration:
 - provider: GitHub Actions
 - package: `@hrica/miica-kit`
 - repository: `h-rica/miica-kit`
-- workflow filename: `publish.yml`
+- workflow filename: `release-please.yml`
 - environment name: empty unless you later add a protected GitHub environment
 
 You can also configure the same relationship from the npm website package settings for `@hrica/miica-kit` using:
 - Organization or user: `h-rica`
 - Repository: `miica-kit`
-- Workflow filename: `publish.yml`
+- Workflow filename: `release-please.yml`
 - Environment name: leave empty unless you later add a protected GitHub environment
 
 Important details from npm's docs:
 - the workflow filename must match exactly
-- only the filename is entered, not `.github/workflows/publish.yml`
+- only the filename is entered, not `.github/workflows/release-please.yml`
 - the workflow file must exist in `.github/workflows/`
+- npm allows only one trusted publisher per package at a time, so keep it pointed at `release-please.yml` for the normal release path
 
 ### 8. Keep publishing secure
 
@@ -282,6 +283,10 @@ Fallback workflow details:
 - OIDC permission: `id-token: write`
 
 Use this fallback only when you intentionally want to publish from a manual tag push or from the Actions UI.
+
+Important:
+- this fallback workflow is not the normal trusted publisher when npm is configured for `release-please.yml`
+- if you want to publish through `publish.yml`, either temporarily repoint npm trusted publishing to `publish.yml` or use a granular publish token with `Bypass 2FA`
 
 ## Verify The Publish
 

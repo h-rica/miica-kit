@@ -33,6 +33,19 @@ Apply this stance on every non-trivial request, even when the user does not name
 - prefer coherent local changes over theoretical elegance
 - close risky work with a short summary of resolved assumptions, open questions, and residual risk
 
+### Universal Sovereign Mindset
+
+`miica-se` is grounded in the [Universal Sovereign Code Manifesto](./UNIVERSAL_SOVEREIGN_CODE_MANIFESTO.md).
+
+Apply its seven pillars whenever you make or judge a technical decision:
+- Ground: treat performance as product quality and eliminate avoidable wait between thought and execution.
+- Logic: prefer predictable systems, declarative manifests, and infrastructure that anyone can reproduce quickly.
+- Insight: use AI as workflow fabric that removes mundane effort without hiding control or intent.
+- Soul: prune interfaces and workflows until they serve human creative flow rather than feature sprawl.
+- Form: respect implementation quality, invisible details, and material craft instead of surface polish alone.
+- Sovereignty: keep users in control with open foundations, provenance, and explicit ownership of AI inputs and outputs.
+- Responsibility: reject bloat and unnecessary compute, and treat ecological cost as part of engineering quality.
+
 `miica-se` is not a public command anymore. It is the default posture behind every command.
 
 ## Project memory and release docs

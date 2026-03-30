@@ -87,6 +87,7 @@ The format is based on Keep a Changelog, and this project aims to follow Semanti
 ### Changed
 - `miica-se` is now an always-on posture inside `AGENTS.md` and project templates instead of a separate public skill.
 - The always-on `miica-se` posture now explicitly requires local-first evidence gathering, selective current-standard verification, assumption and dependency surfacing, paced clarification, and short closure summaries for risky work.
+- The always-on `miica-se` posture is now explicitly grounded in the Universal Sovereign Code Manifesto and its seven pillars: Ground, Logic, Insight, Soul, Form, Sovereignty, and Responsibility.
 - The old phase-by-phase internal skills are no longer the public install surface.
 - README, workflow docs, and project instructions now route work through the eleven-command model.
 - Architecture design and code review now have dedicated public commands instead of being folded into `miica-plan` and `miica-analyse`.

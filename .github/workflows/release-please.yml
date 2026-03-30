@@ -80,6 +80,71 @@ jobs:
           manifest-file: .release-please-manifest.json
           release-as: ${{ steps.docs_release.outputs.release_as }}
 
+      - name: Resolve release outcome
+        id: release_outcome
+        shell: bash
+        env:
+          DEFAULT_RELEASE_CREATED: ${{ steps.release_default.outputs.release_created || 'false' }}
+          DOCS_RELEASE_CREATED: ${{ steps.release_docs.outputs.release_created || 'false' }}
+          DEFAULT_PRS_CREATED: ${{ steps.release_default.outputs.prs_created || 'false' }}
+          DOCS_PRS_CREATED: ${{ steps.release_docs.outputs.prs_created || 'false' }}
+          DEFAULT_TAG_NAME: ${{ steps.release_default.outputs.tag_name || '' }}
+          DOCS_TAG_NAME: ${{ steps.release_docs.outputs.tag_name || '' }}
+          RELEASE_AS: ${{ steps.docs_release.outputs.release_as || '' }}
+        run: |
+          set -euo pipefail
+
+          release_created=false
+          release_kind=none
+          tag_name=""
+
+          if [ "$DOCS_RELEASE_CREATED" = "true" ]; then
+            release_created=true
+            release_kind=docs-only-release
+            tag_name="$DOCS_TAG_NAME"
+          elif [ "$DEFAULT_RELEASE_CREATED" = "true" ]; then
+            release_created=true
+            release_kind=release
+            tag_name="$DEFAULT_TAG_NAME"
+          elif [ "$DOCS_PRS_CREATED" = "true" ]; then
+            release_kind=docs-only-release-pr
+          elif [ "$DEFAULT_PRS_CREATED" = "true" ]; then
+            release_kind=release-pr
+          fi
+
+          echo "release_created=${release_created}" >> "$GITHUB_OUTPUT"
+          echo "release_kind=${release_kind}" >> "$GITHUB_OUTPUT"
+          echo "tag_name=${tag_name}" >> "$GITHUB_OUTPUT"
+
+          {
+            echo "### Release Please Outcome"
+            case "$release_kind" in
+              docs-only-release)
+                echo "- Created docs-only release tag \`${tag_name}\`."
+                echo "- Publish steps will run in this workflow."
+                ;;
+              release)
+                echo "- Created release tag \`${tag_name}\`."
+                echo "- Publish steps will run in this workflow."
+                ;;
+              docs-only-release-pr)
+                echo "- Opened or updated a docs-only release PR."
+                if [ -n "$RELEASE_AS" ]; then
+                  echo "- Proposed patch release override: \`${RELEASE_AS}\`."
+                fi
+                echo "- Publish steps are intentionally skipped until that release PR is merged."
+                ;;
+              release-pr)
+                echo "- Opened or updated a release PR."
+                echo "- Publish steps are intentionally skipped until that release PR is merged."
+                ;;
+              *)
+                echo "- No release PR or GitHub release was created in this run."
+                echo "- Publish steps are intentionally skipped."
+                ;;
+            esac
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Add changelog brief to release PR
         uses: actions/github-script@v7
         env:
@@ -195,31 +260,31 @@ jobs:
 
       # Tags created by release-please use GITHUB_TOKEN, so publish in the same run.
       - name: Check out release tag
-        if: ${{ steps.release_default.outputs.release_created == 'true' || steps.release_docs.outputs.release_created == 'true' }}
+        if: ${{ steps.release_outcome.outputs.release_created == 'true' }}
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
-          ref: ${{ steps.release_docs.outputs.tag_name || steps.release_default.outputs.tag_name }}
+          ref: ${{ steps.release_outcome.outputs.tag_name }}
 
       - name: Set up Node.js
-        if: ${{ steps.release_default.outputs.release_created == 'true' || steps.release_docs.outputs.release_created == 'true' }}
+        if: ${{ steps.release_outcome.outputs.release_created == 'true' }}
         uses: actions/setup-node@v6
         with:
           node-version: "24"
           registry-url: "https://registry.npmjs.org"
 
       - name: Upgrade npm for trusted publishing support
-        if: ${{ steps.release_default.outputs.release_created == 'true' || steps.release_docs.outputs.release_created == 'true' }}
+        if: ${{ steps.release_outcome.outputs.release_created == 'true' }}
         run: npm install -g npm@latest
 
       - name: Smoke test CLI
-        if: ${{ steps.release_default.outputs.release_created == 'true' || steps.release_docs.outputs.release_created == 'true' }}
+        if: ${{ steps.release_outcome.outputs.release_created == 'true' }}
         run: node ./bin/miica-kit.mjs help
 
       - name: Preview publish tarball
-        if: ${{ steps.release_default.outputs.release_created == 'true' || steps.release_docs.outputs.release_created == 'true' }}
+        if: ${{ steps.release_outcome.outputs.release_created == 'true' }}
         run: npm pack --dry-run
 
       - name: Publish package
-        if: ${{ steps.release_default.outputs.release_created == 'true' || steps.release_docs.outputs.release_created == 'true' }}
+        if: ${{ steps.release_outcome.outputs.release_created == 'true' }}
         run: npm publish --access public --provenance
