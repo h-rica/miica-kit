@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog, and this project aims to follow Semantic Versioning once versioned releases begin.
 
+## [0.6.0](https://github.com/h-rica/miica-kit/compare/v0.5.1...v0.6.0) (2026-04-01)
+
+
+### Features
+
+* add opencode installer scripts ([bf7fa73](https://github.com/h-rica/miica-kit/commit/bf7fa734140a45e3f3538b26d3b90afb770fec71))
+* add opencode support and full install-kit bootstrapping ([a571160](https://github.com/h-rica/miica-kit/commit/a571160cbc60b29b712365e51e26e192fffdeaab))
+* wire native skill installs into install-kit ([f541bff](https://github.com/h-rica/miica-kit/commit/f541bff22fd23590f4161b16b2699f821fd3cf43))
+
 ## [0.5.1](https://github.com/h-rica/miica-kit/compare/v0.5.0...v0.5.1) (2026-03-30)
 
 
