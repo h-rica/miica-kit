@@ -22,11 +22,12 @@ Durable memory for `miica-kit`.
 - Project-local installs must write `.agent-kit/install-state.env` plus install snapshots for kit-managed root docs.
 - Project-local uninstall must remove only kit-managed files and restore pre-kit backups only when the current root files still match the last installed kit snapshot.
 - If a project-local uninstall cannot safely restore or remove a root doc, it should leave the file in place and keep `.agent-kit/` state for manual cleanup.
+- `install-kit --tools` should reuse the existing global skill installers and apply the same selected `miica-*` skill filter across project-local and native tool installs.
 
 ## Naming defaults
 
 - Portable public command names live in `skills/` and use the `miica-*` prefix.
-- Installable global skills live in `codex-skills/` and `claude-skills/` and use the same `miica-*` names.
+- Installable global skills live in `codex-skills/` and `claude-skills/`; `OpenCode` and `.agents` reuse the Codex-compatible folders and use the same `miica-*` names.
 - Public command count should stay small unless there is a strong reason to expand it.
 - Tracked plan execution files use `plan-backlog.md`, `plan-in-progress.md`, and `plan-completed.md`.
 - `miica-knowledge` is the reserved public command for pedagogical, audience-layered topic guides; do not fold that workflow back into repo documentation.

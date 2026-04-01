@@ -3,7 +3,7 @@
 > I built this because AI coding sessions often feel fast, impressive, and slightly chaotic. `miica-kit` is my attempt to keep the speed, while putting back just enough discipline to ship work I can still defend the next day.
 
 `miica-kit` is a small workflow layer for AI-assisted work.
-It does not replace `Codex`, `Claude`, or your favorite agent.
+It does not replace `Codex`, `Claude`, `OpenCode`, or your favorite agent.
 It gives them a clearer operating model.
 
 Published package name:
@@ -53,7 +53,7 @@ The goal is simple:
 ## Who It Is For
 
 `miica-kit` is useful if you are:
-- using `Claude`, `Codex`, or another agent for everyday software work
+- using `Claude`, `Codex`, `OpenCode`, or another agent for everyday software work
 - vibe coding but tired of shallow answers and half-finished outputs
 - a solo builder who wants a repeatable workflow
 - a founder, PM, designer, or non-full-time developer who still wants the agent to behave like a serious engineer
@@ -158,6 +158,7 @@ If you just want a better workflow inside the current repository:
 
 ```bash
 npx @hrica/miica-kit install-kit --mode modular
+npx @hrica/miica-kit install-kit --mode full
 ```
 
 Or with Bun:
@@ -167,6 +168,7 @@ bunx @hrica/miica-kit install-kit --mode modular
 ```
 
 This installs the project-local kit and keeps your existing project docs safe by default.
+Use `--mode full` when you also want native Codex, Claude, and OpenCode skills bootstrapped in one run.
 
 ### Fastest path for global skills
 
@@ -175,6 +177,7 @@ If you want the same `miica-*` skills available globally in your agent environme
 ```bash
 npx @hrica/miica-kit install-codex-skills
 npx @hrica/miica-kit install-claude-skills
+npx @hrica/miica-kit install-opencode-skills
 npx @hrica/miica-kit install-agent-skills
 ```
 
@@ -359,7 +362,7 @@ Expected behavior:
 
 ## Installation Modes
 
-You can use the kit in three ways.
+You can use the kit in five ways.
 
 ### 1. Project-local kit
 
@@ -370,16 +373,22 @@ Package runners:
 ```bash
 npx @hrica/miica-kit install-kit --mode direct
 npx @hrica/miica-kit install-kit --mode modular --skills miica-plan,miica-execute-plan,miica-git,miica-implementation
+npx @hrica/miica-kit install-kit --mode full
+npx @hrica/miica-kit install-kit --mode modular --tools codex,claude,opencode --skills miica-plan,miica-execute-plan,miica-git,miica-implementation
 ```
 
 ```bash
 pnpm dlx @hrica/miica-kit install-kit --mode direct
 pnpm dlx @hrica/miica-kit install-kit --mode modular --skills miica-plan,miica-execute-plan,miica-git,miica-implementation
+pnpm dlx @hrica/miica-kit install-kit --mode full
+pnpm dlx @hrica/miica-kit install-kit --mode modular --tools codex,claude,opencode --skills miica-plan,miica-execute-plan,miica-git,miica-implementation
 ```
 
 ```bash
 bunx @hrica/miica-kit install-kit --mode direct
 bunx @hrica/miica-kit install-kit --mode modular --skills miica-plan,miica-execute-plan,miica-git,miica-implementation
+bunx @hrica/miica-kit install-kit --mode full
+bunx @hrica/miica-kit install-kit --mode modular --tools codex,claude,opencode --skills miica-plan,miica-execute-plan,miica-git,miica-implementation
 ```
 
 Native scripts from a local clone:
@@ -387,17 +396,22 @@ Native scripts from a local clone:
 ```powershell
 ./scripts/install-kit.ps1 -TargetPath <path> -Mode direct
 ./scripts/install-kit.ps1 -TargetPath <path> -Mode modular -Skills @('miica-plan','miica-execute-plan','miica-git','miica-implementation')
+./scripts/install-kit.ps1 -TargetPath <path> -Mode full
+./scripts/install-kit.ps1 -TargetPath <path> -Mode modular -Tools @('codex','claude','opencode') -Skills @('miica-plan','miica-execute-plan','miica-git','miica-implementation')
 ```
 
 ```bash
 ./scripts/install-kit.sh <path> direct
 ./scripts/install-kit.sh <path> modular miica-plan miica-execute-plan miica-git miica-implementation
+./scripts/install-kit.sh <path> full
+./scripts/install-kit.sh <path> modular miica-plan miica-execute-plan miica-git miica-implementation --tools codex claude opencode
 ```
 
-#### Direct vs modular
+#### Direct vs modular vs full
 
 - `direct`: install the root docs directly into the project
 - `modular`: preserve the public project root and place the portable kit files under `.agent-kit/`
+- `full`: run the modular project-local install, then bootstrap the native Codex, Claude, and OpenCode skill directories using the same selected `miica-*` skills
 
 #### What gets installed
 
@@ -409,6 +423,15 @@ A project-local install may add:
 - `.agent-kit/WORKFLOW.md`
 - selected `.agent-kit/skills/`
 - `.agent-kit/install-state.env`
+
+With `--tools` or `--mode full`, it may also bootstrap native global skill targets:
+- `~/.codex/skills`
+- `~/.claude/skills`
+- `~/.config/opencode/skills`
+
+`--tools` accepts `codex`, `claude`, and `opencode`.
+When you combine `--tools` with `--skills`, the same `miica-*` filter is applied to both the project-local portable skills and the native tool installs.
+`uninstall-kit` remains project-local only; use the dedicated global uninstall commands when you want to remove native tool installs.
 
 #### Safety behavior
 
@@ -466,7 +489,33 @@ Default install target:
 - `~/.claude/skills`
 - or `$CLAUDE_HOME/skills` if `CLAUDE_HOME` is set
 
-### 4. Global `.agents` skills
+### 4. Global OpenCode skills
+
+Use this when you want the same command surface in `OpenCode`'s native global skill directory.
+
+```bash
+npx @hrica/miica-kit install-opencode-skills
+pnpm dlx @hrica/miica-kit install-opencode-skills --skills miica-plan,miica-architecture,miica-fix-issue,miica-documentation,miica-knowledge,miica-deep-dive,miica-analyse,miica-review,miica-implementation,miica-git,miica-execute-plan
+bunx @hrica/miica-kit install-opencode-skills
+```
+
+Native scripts:
+
+```powershell
+./scripts/install-opencode-skills.ps1
+./scripts/install-opencode-skills.ps1 -Skills @('miica-plan','miica-architecture','miica-fix-issue','miica-documentation','miica-knowledge','miica-deep-dive','miica-analyse','miica-review','miica-implementation','miica-git','miica-execute-plan')
+```
+
+```bash
+./scripts/install-opencode-skills.sh
+./scripts/install-opencode-skills.sh "" miica-plan miica-architecture miica-fix-issue miica-documentation miica-knowledge miica-deep-dive miica-analyse miica-review miica-implementation miica-git miica-execute-plan
+```
+
+Default install target:
+- `~/.config/opencode/skills`
+- or `$OPENCODE_CONFIG_DIR/skills` if `OPENCODE_CONFIG_DIR` is set
+
+### 5. Global `.agents` skills
 
 Use this when you want the same commands in `.agents`-style environments.
 
@@ -525,6 +574,7 @@ Project uninstall removes **only kit-managed elements** and is conservative with
 ```bash
 npx @hrica/miica-kit uninstall-codex-skills --skills miica-plan,miica-execute-plan
 npx @hrica/miica-kit uninstall-claude-skills --skills miica-plan,miica-execute-plan
+npx @hrica/miica-kit uninstall-opencode-skills --skills miica-plan,miica-execute-plan
 npx @hrica/miica-kit uninstall-agent-skills --skills miica-plan,miica-execute-plan
 ```
 
@@ -661,7 +711,7 @@ The difference is that you do not have to think in fifteen micro-modes every day
 - [`WORKFLOW.md`](./WORKFLOW.md): public workflow and command-routing rules
 - [`knowledge-base/npm-package-publishing-with-github-actions/`](./knowledge-base/npm-package-publishing-with-github-actions/README.md): canonical `miica-knowledge` example for npm package publishing with GitHub Actions
 - [`skills/`](./skills): eleven portable public commands
-- [`codex-skills/`](./codex-skills): eleven installable skill folders for Codex and `.agents`
+- [`codex-skills/`](./codex-skills): eleven installable skill folders reused for Codex, OpenCode, and `.agents`
 - [`claude-skills/`](./claude-skills): eleven installable skill folders for Claude
 - [`templates/UI_REFERENCE_GUIDE_TEMPLATE.md`](./templates/UI_REFERENCE_GUIDE_TEMPLATE.md): markdown template for reference-driven UI guide artifacts
 - [`templates/UI_REFERENCE_GUIDE_SCHEMA.json`](./templates/UI_REFERENCE_GUIDE_SCHEMA.json): strict machine-readable schema for `guide.json` outputs
@@ -680,6 +730,10 @@ The difference is that you do not have to think in fifteen micro-modes every day
 - [`scripts/uninstall-claude-skills.ps1`](./scripts/uninstall-claude-skills.ps1): PowerShell uninstaller for `~/.claude/skills`
 - [`scripts/install-claude-skills.sh`](./scripts/install-claude-skills.sh): shell installer for `~/.claude/skills`
 - [`scripts/uninstall-claude-skills.sh`](./scripts/uninstall-claude-skills.sh): shell uninstaller for `~/.claude/skills`
+- [`scripts/install-opencode-skills.ps1`](./scripts/install-opencode-skills.ps1): PowerShell installer for `~/.config/opencode/skills`
+- [`scripts/uninstall-opencode-skills.ps1`](./scripts/uninstall-opencode-skills.ps1): PowerShell uninstaller for `~/.config/opencode/skills`
+- [`scripts/install-opencode-skills.sh`](./scripts/install-opencode-skills.sh): shell installer for `~/.config/opencode/skills`
+- [`scripts/uninstall-opencode-skills.sh`](./scripts/uninstall-opencode-skills.sh): shell uninstaller for `~/.config/opencode/skills`
 - [`scripts/install-agent-skills.ps1`](./scripts/install-agent-skills.ps1): PowerShell installer for `~/.agents/skills`
 - [`scripts/uninstall-agent-skills.ps1`](./scripts/uninstall-agent-skills.ps1): PowerShell uninstaller for `~/.agents/skills`
 - [`scripts/install-agent-skills.sh`](./scripts/install-agent-skills.sh): shell installer for `~/.agents/skills`

@@ -89,6 +89,8 @@ The format is based on Keep a Changelog, and this project aims to follow Semanti
 - Canonical `knowledge-base/npm-package-publishing-with-github-actions/` example with layered outputs, dated sources, and a root README link so the repo now shows what `miica-knowledge` actually produces.
 - Project and global installers now support the simplified `miica-*` command model.
 - Symmetric uninstall commands for project-local installs, Codex skills, Claude skills, and `.agents` skills.
+- Native `OpenCode` install and uninstall commands plus shell and PowerShell wrappers targeting `~/.config/opencode/skills` or `$OPENCODE_CONFIG_DIR/skills` while reusing the Codex-compatible skill surface.
+- `install-kit` now supports `--mode full` and `--tools codex,claude,opencode` so one command can combine project-local setup with native global skill bootstrapping.
 - A `claude-skills/` surface mirroring the installable `miica-*` skill folders for Claude.
 - Project-local installs now write `.agent-kit/install-state.env` plus install snapshots so uninstall can safely remove kit-owned files or restore pre-kit backups.
 - A `Conventional PR Title` workflow now blocks non-Conventional-Commit pull request titles before they can land on `main` with release-breaking merge metadata.

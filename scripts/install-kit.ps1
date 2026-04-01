@@ -2,10 +2,12 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$TargetPath,
 
-    [ValidateSet('direct', 'modular')]
+    [ValidateSet('direct', 'modular', 'full')]
     [string]$Mode = 'direct',
 
     [string[]]$Skills = @(),
+
+    [string[]]$Tools = @(),
 
     [switch]$Force
 )
@@ -290,6 +292,49 @@ function Remove-DirectModeArtifacts {
     Remove-KnownPortableSkillFiles -SkillsSourceDir $SkillsSourceDir -SkillsTargetDir $skillsTargetDir
 }
 
+function Resolve-InstallKitToolTargets {
+    param(
+        [string[]]$Requested = @()
+    )
+
+    $Selected = New-Object System.Collections.Generic.List[string]
+    foreach ($Tool in $Requested) {
+        $Candidate = $Tool.ToLowerInvariant()
+        if ($Candidate -notin @('codex', 'claude', 'opencode')) {
+            throw "No install-kit tool matched '$Tool'. Use exact names like codex, claude, or opencode."
+        }
+        if ($Selected -notcontains $Candidate) {
+            $Selected.Add($Candidate)
+        }
+    }
+
+    return @($Selected)
+}
+
+function Install-RequestedToolTargets {
+    param(
+        [string[]]$ToolTargets = @(),
+        [string[]]$Skills = @(),
+        [switch]$Force
+    )
+
+    foreach ($ToolTarget in $ToolTargets) {
+        $ScriptName = switch ($ToolTarget) {
+            'codex' { 'install-codex-skills.ps1' }
+            'claude' { 'install-claude-skills.ps1' }
+            'opencode' { 'install-opencode-skills.ps1' }
+            default { throw "Unsupported install-kit tool target: $ToolTarget" }
+        }
+
+        $ScriptPath = Join-Path $PSScriptRoot $ScriptName
+        if ($Skills.Count -gt 0) {
+            & $ScriptPath -Skills $Skills -Force:$Force
+        } else {
+            & $ScriptPath -Force:$Force
+        }
+    }
+}
+
 $KitRoot = Split-Path -Parent $PSScriptRoot
 $ResolvedTarget = (Resolve-Path -LiteralPath $TargetPath -ErrorAction SilentlyContinue)
 if ($null -eq $ResolvedTarget) {
@@ -302,15 +347,20 @@ $AgentKitDir = Join-Path $TargetRoot '.agent-kit'
 $MemorySource = Join-Path $KitRoot 'templates\PROJECT_MEMORY.md'
 $ChangeLogSource = Join-Path $KitRoot 'templates\PROJECT_CHANGELOG.md'
 $SkillsSourceDir = Join-Path $KitRoot 'skills'
+$SelectedToolTargets = Resolve-InstallKitToolTargets -Requested $Tools
+$ProjectMode = if ($Mode -eq 'full') { 'modular' } else { $Mode }
+if ($Mode -eq 'full' -and $SelectedToolTargets.Count -eq 0) {
+    $SelectedToolTargets = @('codex', 'claude', 'opencode')
+}
 
 New-Item -ItemType Directory -Path $AgentKitDir -Force | Out-Null
 
-if ($Mode -eq 'direct') {
+if ($ProjectMode -eq 'direct') {
     $agentResult = Install-AgentFile -Source (Join-Path $KitRoot 'AGENTS.md') -TargetRoot $TargetRoot -Overwrite:$Force
     $memoryResult = Install-ProjectDoc -Source $MemorySource -TargetRoot $TargetRoot -FileName 'MEMORY.md' -Overwrite:$Force
     $changeLogResult = Install-ProjectDoc -Source $ChangeLogSource -TargetRoot $TargetRoot -FileName 'CHANGELOG.md' -Overwrite:$Force
     Remove-DirectModeArtifacts -TargetRoot $TargetRoot -SkillsSourceDir $SkillsSourceDir
-    Write-InstallState -TargetRoot $TargetRoot -Mode 'direct' -AgentState $agentResult -MemoryState $memoryResult -ChangeLogState $changeLogResult
+    Write-InstallState -TargetRoot $TargetRoot -Mode $ProjectMode -AgentState $agentResult -MemoryState $memoryResult -ChangeLogState $changeLogResult
 
     Write-Host "Installed direct daily-driver kit to $TargetRoot"
     if ($agentResult -eq 'installed-root') {
@@ -326,6 +376,7 @@ if ($Mode -eq 'direct') {
     Write-ProjectDocSummary -FileName 'MEMORY.md' -Result $memoryResult
     Write-ProjectDocSummary -FileName 'CHANGELOG.md' -Result $changeLogResult
     Write-Host '- .agent-kit/install-state.env'
+    Install-RequestedToolTargets -ToolTargets $SelectedToolTargets -Skills $Skills -Force:$Force
     exit 0
 }
 
@@ -369,7 +420,7 @@ foreach ($SkillFile in $SelectedSkillFiles) {
     Sync-File -Source $SkillFile.FullName -Destination (Join-Path $SkillsTargetDir $SkillFile.Name)
 }
 
-Write-InstallState -TargetRoot $TargetRoot -Mode 'modular' -AgentState $agentResult -MemoryState $memoryResult -ChangeLogState $changeLogResult -SkillFiles $SelectedSkillNames
+Write-InstallState -TargetRoot $TargetRoot -Mode $ProjectMode -AgentState $agentResult -MemoryState $memoryResult -ChangeLogState $changeLogResult -SkillFiles $SelectedSkillNames
 
 Write-Host "Installed modular agent kit to $TargetRoot"
 if ($agentResult -eq 'installed-root') {
@@ -388,3 +439,4 @@ Write-Host '- .agent-kit/ROLES.md'
 Write-Host '- .agent-kit/WORKFLOW.md'
 Write-Host '- .agent-kit/skills/'
 Write-Host '- .agent-kit/install-state.env'
+Install-RequestedToolTargets -ToolTargets $SelectedToolTargets -Skills $Skills -Force:$Force

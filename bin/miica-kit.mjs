@@ -18,22 +18,28 @@ function usage() {
   console.log(`miica-kit
 
 Usage:
-  miica-kit install-kit [target] [--mode direct|modular] [--skills miica-plan,miica-execute-plan,miica-git,miica-implementation] [--force]
+  miica-kit install-kit [target] [--mode direct|modular|full] [--skills miica-plan,miica-execute-plan,miica-git,miica-implementation] [--tools codex,claude,opencode] [--force]
   miica-kit uninstall-kit [target]
   miica-kit install-codex-skills [target-dir] [--skills miica-plan,miica-execute-plan,miica-git,miica-implementation] [--force]
   miica-kit uninstall-codex-skills [target-dir] [--skills miica-plan,miica-execute-plan,miica-git,miica-implementation]
   miica-kit install-claude-skills [target-dir] [--skills miica-plan,miica-execute-plan,miica-git,miica-implementation] [--force]
   miica-kit uninstall-claude-skills [target-dir] [--skills miica-plan,miica-execute-plan,miica-git,miica-implementation]
+  miica-kit install-opencode-skills [target-dir] [--skills miica-plan,miica-execute-plan,miica-git,miica-implementation] [--force]
+  miica-kit uninstall-opencode-skills [target-dir] [--skills miica-plan,miica-execute-plan,miica-git,miica-implementation]
   miica-kit install-agent-skills [target-dir] [--skills miica-plan,miica-execute-plan,miica-git,miica-implementation] [--force]
   miica-kit uninstall-agent-skills [target-dir] [--skills miica-plan,miica-execute-plan,miica-git,miica-implementation]
   miica-kit help
 
 Notes:
   - install-kit and uninstall-kit default to the current working directory when no target is provided.
+  - install-kit --mode full installs the modular project-local kit and the native Codex, Claude, and OpenCode skill surfaces.
+  - install-kit --tools bootstraps the same skill filter into selected native tool directories.
   - install-codex-skills defaults to $CODEX_HOME/skills or ~/.codex/skills.
   - uninstall-codex-skills removes only kit-managed miica skill folders.
   - install-claude-skills defaults to $CLAUDE_HOME/skills or ~/.claude/skills.
   - uninstall-claude-skills removes only kit-managed miica skill folders.
+  - install-opencode-skills defaults to $OPENCODE_CONFIG_DIR/skills or ~/.config/opencode/skills.
+  - uninstall-opencode-skills removes only kit-managed miica skill folders.
   - install-agent-skills defaults to $AGENTS_HOME/skills or ~/.agents/skills.
   - uninstall-agent-skills removes only kit-managed miica skill folders.
 `);
@@ -58,11 +64,14 @@ function unique(values) {
   return [...new Set(values)];
 }
 
+const installKitToolTargets = ["codex", "claude", "opencode"];
+
 function parseInstallKitArgs(args) {
   const options = {
     targetPath: process.cwd(),
     mode: "direct",
     skills: [],
+    tools: [],
     force: false,
   };
   const positional = [];
@@ -118,6 +127,24 @@ function parseInstallKitArgs(args) {
       options.skills.push(...parseList(arg.slice("--skills=".length)));
       continue;
     }
+    if (arg === "--tool") {
+      options.tools.push(readValue(args, i, arg));
+      i += 1;
+      continue;
+    }
+    if (arg.startsWith("--tool=")) {
+      options.tools.push(arg.slice("--tool=".length));
+      continue;
+    }
+    if (arg === "--tools") {
+      options.tools.push(...parseList(readValue(args, i, arg)));
+      i += 1;
+      continue;
+    }
+    if (arg.startsWith("--tools=")) {
+      options.tools.push(...parseList(arg.slice("--tools=".length)));
+      continue;
+    }
     if (arg.startsWith("-")) {
       fail(`Unknown option: ${arg}`);
     }
@@ -132,12 +159,29 @@ function parseInstallKitArgs(args) {
     }
   }
 
-  if (!["direct", "modular"].includes(options.mode)) {
-    fail(`Unknown mode: ${options.mode}. Use direct or modular.`);
+  if (!["direct", "modular", "full"].includes(options.mode)) {
+    fail(`Unknown mode: ${options.mode}. Use direct, modular, or full.`);
   }
 
   options.skills = unique(options.skills.map((item) => item.toLowerCase()));
+  options.tools = unique(selectInstallKitTools(options.tools));
+  if (options.mode === "full") {
+    options.mode = "modular";
+    if (options.tools.length === 0) {
+      options.tools = [...installKitToolTargets];
+    }
+  }
   return options;
+}
+
+function selectInstallKitTools(requested) {
+  return requested.map((wanted) => {
+    const match = installKitToolTargets.find((entry) => entry === wanted.toLowerCase());
+    if (!match) {
+      fail(`No install-kit tool matched '${wanted}'. Use exact names like codex, claude, or opencode.`);
+    }
+    return match;
+  });
 }
 
 function parseTargetArgs(args) {
@@ -522,6 +566,7 @@ function installKit(options) {
     writeProjectDocSummary("MEMORY.md", memoryResult);
     writeProjectDocSummary("CHANGELOG.md", changelogResult);
     console.log("- .agent-kit/install-state.env");
+    installRequestedToolTargets(options);
     return;
   }
 
@@ -596,6 +641,19 @@ function installKit(options) {
   console.log("- .agent-kit/WORKFLOW.md");
   console.log("- .agent-kit/skills/");
   console.log("- .agent-kit/install-state.env");
+  installRequestedToolTargets(options);
+}
+
+function installRequestedToolTargets(options) {
+  for (const tool of unique(options.tools)) {
+    if (tool === "codex") {
+      installCodexSkills({ targetDir: "", skills: options.skills, force: options.force });
+    } else if (tool === "claude") {
+      installClaudeSkills({ targetDir: "", skills: options.skills, force: options.force });
+    } else if (tool === "opencode") {
+      installOpenCodeSkills({ targetDir: "", skills: options.skills, force: options.force });
+    }
+  }
 }
 
 function uninstallKit(options) {
@@ -823,6 +881,46 @@ function uninstallClaudeSkills(options) {
   }
 }
 
+function installOpenCodeSkills(options) {
+  const openCodeConfigDir = process.env.OPENCODE_CONFIG_DIR ? process.env.OPENCODE_CONFIG_DIR : join(homedir(), ".config", "opencode");
+  const targetDir = resolve(options.targetDir || join(openCodeConfigDir, "skills"));
+  ensureDir(targetDir);
+
+  const selected = unique(selectInstallableSkills(options.skills, "OpenCode", "codex-skills"));
+
+  for (const entry of selected) {
+    copyDirectorySafe(join(kitRoot, "codex-skills", entry), join(targetDir, entry), options.force);
+  }
+
+  console.log(`Installed OpenCode skills to ${targetDir}`);
+  for (const entry of selected) {
+    console.log(`- ${entry}`);
+  }
+}
+
+function uninstallOpenCodeSkills(options) {
+  const openCodeConfigDir = process.env.OPENCODE_CONFIG_DIR ? process.env.OPENCODE_CONFIG_DIR : join(homedir(), ".config", "opencode");
+  const targetDir = resolve(options.targetDir || join(openCodeConfigDir, "skills"));
+  const selected = unique(selectInstallableSkills(options.skills, "OpenCode", "codex-skills"));
+  const removed = [];
+
+  for (const entry of selected) {
+    if (removePathIfExists(join(targetDir, entry))) {
+      removed.push(entry);
+    }
+  }
+
+  if (removed.length === 0) {
+    console.log(`No kit-managed OpenCode skills were found in ${targetDir}`);
+    return;
+  }
+
+  console.log(`Uninstalled OpenCode skills from ${targetDir}`);
+  for (const entry of removed) {
+    console.log(`- ${entry}`);
+  }
+}
+
 function installAgentSkills(options) {
   const agentsHome = process.env.AGENTS_HOME ? process.env.AGENTS_HOME : join(homedir(), ".agents");
   const targetDir = resolve(options.targetDir || join(agentsHome, "skills"));
@@ -882,6 +980,10 @@ if (command === "install-kit" || command === "install") {
   installClaudeSkills(parseSkillArgs(rest));
 } else if (command === "uninstall-claude-skills" || command === "uninstall-claude") {
   uninstallClaudeSkills(parseSkillArgs(rest));
+} else if (command === "install-opencode-skills" || command === "install-opencode") {
+  installOpenCodeSkills(parseSkillArgs(rest));
+} else if (command === "uninstall-opencode-skills" || command === "uninstall-opencode") {
+  uninstallOpenCodeSkills(parseSkillArgs(rest));
 } else if (command === "install-agent-skills" || command === "install-agents") {
   installAgentSkills(parseSkillArgs(rest));
 } else if (command === "uninstall-agent-skills" || command === "uninstall-agents") {
