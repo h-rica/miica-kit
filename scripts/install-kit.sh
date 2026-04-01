@@ -1,16 +1,87 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+usage() {
+  echo "Usage: ./scripts/install-kit.sh <target-path> [direct|modular|full] [skill-filter ...] [--tools codex claude opencode] [--force]" >&2
+}
+
 if [ "$#" -lt 1 ]; then
-  echo "Usage: ./scripts/install-kit.sh <target-path> [direct|modular] [skill-filter ...]" >&2
+  usage
   exit 1
 fi
 
 TARGET_PATH="$1"
-MODE="${2:-direct}"
 shift || true
-if [ "$#" -gt 0 ]; then shift || true; fi
-SKILL_FILTERS=("$@")
+
+MODE="direct"
+if [ "$#" -gt 0 ] && [[ "$1" != --* ]]; then
+  MODE="$1"
+  shift || true
+fi
+
+SKILL_FILTERS=()
+TOOL_TARGETS=()
+
+append_csv_values() {
+  local target="$1"
+  local value="$2"
+  local IFS=','
+  read -r -a parts <<< "$value"
+  for part in "${parts[@]}"; do
+    [ -n "$part" ] || continue
+    if [ "$target" = "skills" ]; then
+      SKILL_FILTERS+=("$part")
+    else
+      TOOL_TARGETS+=("${part,,}")
+    fi
+  done
+}
+
+parse_target="skills"
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --help|-h)
+      usage
+      exit 0
+      ;;
+    --force)
+      export FORCE=1
+      shift || true
+      ;;
+    --skill|--skills)
+      parse_target="skills"
+      shift || true
+      while [ "$#" -gt 0 ] && [[ "$1" != --* ]]; do
+        append_csv_values "skills" "$1"
+        shift || true
+      done
+      ;;
+    --skill=*|--skills=*)
+      append_csv_values "skills" "${1#*=}"
+      shift || true
+      ;;
+    --tool|--tools)
+      parse_target="tools"
+      shift || true
+      while [ "$#" -gt 0 ] && [[ "$1" != --* ]]; do
+        append_csv_values "tools" "$1"
+        shift || true
+      done
+      ;;
+    --tool=*|--tools=*)
+      append_csv_values "tools" "${1#*=}"
+      shift || true
+      ;;
+    --*)
+      echo "Unknown option: $1" >&2
+      exit 1
+      ;;
+    *)
+      append_csv_values "$parse_target" "$1"
+      shift || true
+      ;;
+  esac
+done
 
 KIT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 mkdir -p "$TARGET_PATH"
@@ -197,6 +268,63 @@ remove_direct_mode_artifacts() {
   remove_known_portable_skills "$AGENT_KIT_DIR/skills"
 }
 
+normalize_tool_targets() {
+  local normalized=()
+  declare -A seen=()
+
+  for tool in "${TOOL_TARGETS[@]}"; do
+    case "$tool" in
+      codex|claude|opencode)
+        ;;
+      *)
+        echo "No install-kit tool matched '$tool'. Use exact names like codex, claude, or opencode." >&2
+        exit 1
+        ;;
+    esac
+
+    if [ -z "${seen[$tool]+x}" ]; then
+      normalized+=("$tool")
+      seen[$tool]=1
+    fi
+  done
+
+  TOOL_TARGETS=("${normalized[@]}")
+}
+
+install_requested_tool_targets() {
+  for tool in "${TOOL_TARGETS[@]}"; do
+    case "$tool" in
+      codex)
+        bash "$KIT_ROOT/scripts/install-codex-skills.sh" "" "${SKILL_FILTERS[@]}"
+        ;;
+      claude)
+        bash "$KIT_ROOT/scripts/install-claude-skills.sh" "" "${SKILL_FILTERS[@]}"
+        ;;
+      opencode)
+        bash "$KIT_ROOT/scripts/install-opencode-skills.sh" "" "${SKILL_FILTERS[@]}"
+        ;;
+    esac
+  done
+}
+
+case "$MODE" in
+  full)
+    MODE="modular"
+    if [ "${#TOOL_TARGETS[@]}" -eq 0 ]; then
+      TOOL_TARGETS=(codex claude opencode)
+    fi
+    ;;
+  direct|modular)
+    ;;
+  *)
+    echo "Unknown mode: $MODE" >&2
+    echo "Use 'direct', 'modular', or 'full'." >&2
+    exit 1
+    ;;
+esac
+
+normalize_tool_targets
+
 case "$MODE" in
   direct)
     agent_result="$(install_agent_file "$KIT_ROOT/AGENTS.md")"
@@ -219,6 +347,7 @@ case "$MODE" in
     write_project_doc_summary "MEMORY.md" "$memory_result"
     write_project_doc_summary "CHANGELOG.md" "$changelog_result"
     echo "- .agent-kit/install-state.env"
+    install_requested_tool_targets
     ;;
   modular)
     agent_result="$(install_agent_file "$KIT_ROOT/templates/PROJECT_AGENT_INSTRUCTIONS.md")"
@@ -298,10 +427,11 @@ case "$MODE" in
     echo "- .agent-kit/WORKFLOW.md"
     echo "- .agent-kit/skills/"
     echo "- .agent-kit/install-state.env"
+    install_requested_tool_targets
     ;;
   *)
     echo "Unknown mode: $MODE" >&2
-    echo "Use 'direct' or 'modular'." >&2
+    echo "Use 'direct', 'modular', or 'full'." >&2
     exit 1
     ;;
 esac
